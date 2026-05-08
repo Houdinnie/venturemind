@@ -1,0 +1,48 @@
+{
+  "skill_name": "green-button",
+  "evals": [
+    {
+      "id": "manifest-dispatch",
+      "name": "JSON Manifest dispatch pipeline",
+      "prompt": "User issues verified command: 'EXECUTE_PLAN_V1: Formation(WY_LLC) -> Banking(Mercury) -> Wallet(Safe_Mainnet) -> Funding(Stripe_Connect)'. Trace the full manifest dispatch pipeline: how the command is cryptographically verified, how the Orchestrator parses the manifest, how sub-agents receive tasks, and what happens at each step.",
+      "expected_output": "Response must describe: cryptographic session verification; manifest parsing into sub-tasks; sub-agents receive tasks via secure channel; Legal Swarm forms WY LLC (parallel: KYC upload); Mobility Swarm applies to Mercury; Web3 Swarm deploys Safe{Mainnet} multi-sig; Capital Swarm connects Stripe Connect; each step has HITL checkpoint; Telegram confirmation required after each CRIMSON action.",
+      "assertions": [
+        "Cryptographically verifies user session",
+        "Parsers manifest into sub-tasks per swarm",
+        "Legal Swarm forms WY LLC in parallel with KYC upload",
+        "Mobility Swarm applies to Mercury",
+        "Web3 Swarm deploys Safe{Mainnet} multi-sig wallet",
+        "Capital Swarm connects Stripe Connect",
+        "Telegram confirmation required at CRIMSON steps"
+      ]
+    },
+    {
+      "id": "crimson-approval-flow",
+      "name": "CRIMSON multi-sig approval flow",
+      "prompt": "A $15,000 wire transfer is triggered from the Operating Fund to a newly formed UAE entity. Walk through the CRIMSON approval flow: how Watchdog detects it, what the multi-sig requirement is, how the 48-hour cooling-off period works, and what the user must do to authorize or abort.",
+      "expected_output": "Response must: detect CRIMSON (>$10k wire); require 2-of-3 multi-sig (user + Watchdog + Orchestrator); start 48hr cooling-off timer; send Telegram alert to user with transfer details; user must explicitly approve via Telegram green button; Wire transfer executes only after approval + cooling-off elapsed; abort available during cooling-off.",
+      "assertions": [
+        "Detects CRIMSON trigger for >$10k wire",
+        "Requires 2-of-3 multi-sig approval",
+        "Starts 48-hour cooling-off period",
+        "Sends Telegram alert with transfer details",
+        "User must explicitly approve via Telegram",
+        "Abort available during cooling-off window"
+      ]
+    },
+    {
+      "id": "execution-idempotency",
+      "name": "Idempotent execution on retry",
+      "prompt": "The Green Button command times out during entity formation (the Wyoming Secretary of State API is slow). The user retries. Explain how the Orchestrator ensures idempotency — that the LLC is not double-formed, that the KYC data is not re-submitted, and how the partial state is recovered.",
+      "expected_output": "Response must use idempotency key (entity_formation_${userId}_${timestamp}); check formation status before re-submitting; if LLC already exists (based on name+date), skip formation and verify existing documents; KYC data cached with 24hr TTL; partial state recovered from AgentDecisionLog; no duplicate charges or submissions.",
+      "assertions": [
+        "Uses idempotency key for formation request",
+        "Checks existing LLC before re-submitting",
+        "Skips formation if already completed",
+        "Verifies existing documents",
+        "KYC cached with 24hr TTL",
+        "Recovers partial state from AgentDecisionLog"
+      ]
+    }
+  ]
+}

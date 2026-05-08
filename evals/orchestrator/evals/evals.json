@@ -1,0 +1,60 @@
+{
+  "skill_name": "orchestrator",
+  "evals": [
+    {
+      "id": "founder-profile-routing",
+      "name": "Correct swarm routing from FounderProfile",
+      "prompt": "FounderProfile: { business_type: 'e-commerce', target_markets: ['UAE', 'USA'], capital_raise: 250000, timeline: '6 months', tax_areas: ['income_tax', 'vat'], mobility: ['residency_visa', 'bank_account'] }. Route this to the correct domain swarms and list the execution sequence.",
+      "expected_output": "Response must route to: Capital Swarm (funding strategy), Legal Swarm (entity formation), Financial Swarm (tax optimization), Mobility Swarm (residency + banking). Execution sequence: Legal → Financial → Mobility → Capital. Must create FounderBrief JSON.",
+      "assertions": [
+        "Routes to Capital Swarm for $250k raise",
+        "Routes to Legal Swarm for entity formation",
+        "Routes to Financial Swarm for tax",
+        "Routes to Mobility Swarm for residency/banking",
+        "Specifies correct execution sequence",
+        "Creates FounderBrief JSON structure"
+      ]
+    },
+    {
+      "id": "parallel-verification-loops",
+      "name": "4 parallel verification loop execution",
+      "prompt": "The Orchestrator receives a confirmed FounderProfile. Describe the exact 4 parallel verification loops that fire simultaneously, what each sub-agent checks, and how results are merged before the FounderBrief is generated. Include timing and confidence aggregation.",
+      "expected_output": "Response must describe 4 loops: Global Intelligence (regulatory changes), Citation & Source (primary source enforcement), Competitive Moat (market validation), Compliance Cross-Check (Tax+Legal consistency). All run in parallel. Results merged via confidence-weighted aggregation. FounderBrief generated only after all loops complete.",
+      "assertions": [
+        "Describes 4 parallel verification loops",
+        "Global Intelligence checks regulatory changes",
+        "Citation & Source enforces primary source only",
+        "Competitive Moat validates market position",
+        "Compliance Cross-Check validates Tax+Legal consistency",
+        "Merges results via confidence-weighted aggregation",
+        "FounderBrief generated only after all loops complete"
+      ]
+    },
+    {
+      "id": "cross-swarm-coordination",
+      "name": "Cross-swarm conflict resolution",
+      "prompt": "The Engineering Swarm proposes a tech stack that requires a US entity (Delaware C-Corp) but the Capital Swarm's strategy recommends a Dubai IBC for investor optics. The Central Swarm Lead must resolve this. Explain the resolution process, which agent has final say, and how the conflict is logged.",
+      "expected_output": "Response must escalate to Central Swarm Lead for cross-domain conflict resolution; Capital Swarm strategy takes precedence over Engineering preference on entity structure; conflict logged in AgentDecisionLog with confidence scores and cited reasoning; user approval required for final decision.",
+      "assertions": [
+        "Escalates to Central Swarm Lead",
+        "Capital Swarm entity strategy takes precedence",
+        "Engineering follows legal/structure requirements",
+        "Conflict logged in AgentDecisionLog",
+        "Requires user approval for final entity decision"
+      ]
+    },
+    {
+      "id": "ingestion-stage-gate",
+      "name": "Stage Gate validation before ingestion",
+      "prompt": "A founder reaches Stage Gate 3 (Business Model Canvas) but skips providing revenue model information. The Strategist Agent's branching logic must detect this gap. Explain how the gate prevents advancement, what question is asked, and what happens if the founder cannot answer.",
+      "expected_output": "Response must hold at Stage Gate 3 until revenue model is provided; must ask specific revenue question (e.g., 'What is your pricing structure and expected monthly revenue?'); if founder cannot answer, must offer to generate a template or escalate to Human-in-the-loop; must NOT proceed to Stage 4 without completion.",
+      "assertions": [
+        "Holds at Stage Gate 3 until revenue model provided",
+        "Asks specific revenue question",
+        "Offers template if founder cannot answer",
+        "Escalates to HITL if repeated failure",
+        "Does NOT advance to Stage 4 without completion"
+      ]
+    }
+  ]
+}

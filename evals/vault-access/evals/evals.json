@@ -1,0 +1,48 @@
+{
+  "skill_name": "vault-access",
+  "evals": [
+    {
+      "id": "client-side-encryption",
+      "name": "Client-side AES-256-GCM encryption flow",
+      "prompt": "A founder uploads their passport and tax ID to the Zero-Knowledge Document Vault. Describe the exact encryption flow: how the client generates the DEK, how the KEK is derived from the user's passphrase, how the document is encrypted, how the encrypted document and encrypted DEK are stored, and why the server never sees plain text.",
+      "expected_output": "Response must describe: client generates random 256-bit DEK; client derives KEK from passphrase using Argon2id (memory=64MB, iterations=3); client encrypts document with AES-256-GCM using DEK; client encrypts DEK with KEK; encrypted document stored in S3; encrypted DEK stored in Vault metadata; server never has access to KEK or plain text; only user can decrypt with passphrase.",
+      "assertions": [
+        "Client generates random 256-bit DEK",
+        "KEK derived via Argon2id from passphrase",
+        "Document encrypted with AES-256-GCM",
+        "DEK encrypted with KEK",
+        "Encrypted document stored separately from encrypted DEK",
+        "Server never sees plain text or KEK"
+      ]
+    },
+    {
+      "id": "tee-decryption-flow",
+      "name": "TEE enclave decryption for agent access",
+      "prompt": "The Tax Strategist agent needs to read a founder's W-9 form to prepare tax filings. Explain how the TEE (Trusted Execution Environment) flow works: how the agent's request is validated, how the document is decrypted inside the enclave, how the agent receives only the processed output (not the raw document), and how the audit trail is created.",
+      "expected_output": "Response must describe: agent requests document with purpose (tax_prep) + user consent; Vault validates request against policy; encrypted document + encrypted DEK loaded into TEE; user re-authenticates (biometric/re-passphrase) inside TEE; TEE decrypts using KEK; agent receives only structured output (e.g., {name, tin, address}) not raw PDF; audit log written to immutable AgentDecisionLog; TEE attestation generated.",
+      "assertions": [
+        "Agent request validated against policy with user consent",
+        "Document loaded into TEE enclave",
+        "User re-authenticates inside TEE",
+        "Agent receives structured output only, not raw document",
+        "Audit log written to immutable AgentDecisionLog",
+        "TEE attestation generated"
+      ]
+    },
+    {
+      "id": "access-revocation",
+      "name": "Immediate access revocation on breach",
+      "prompt": "The Watchdog Agent detects a CRIMSON security event — a sub-agent attempted to exfiltrate KYC documents by calling the vault API outside approved parameters. Explain the full revocation flow: how access is immediately revoked, how all active sessions are terminated, how keys are rotated, and how the incident is documented.",
+      "expected_output": "Response must: Watchdog fires CRIMSON alert (WD-010); immediately revoke all vault access tokens; terminate all active agent sessions for offending agent; rotate DEK for affected documents (re-encrypt with new DEK); notify user via Telegram; document incident in immutable audit log; require manual re-authorization before vault access resumes; escalate to human security review.",
+      "assertions": [
+        "Watchdog fires CRIMSON alert (WD-010)",
+        "All vault access tokens immediately revoked",
+        "Offending agent's sessions terminated",
+        "DEK rotated and documents re-encrypted",
+        "User notified via Telegram",
+        "Incident documented in immutable audit log",
+        "Manual re-authorization required to restore access"
+      ]
+    }
+  ]
+}
