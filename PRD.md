@@ -1,674 +1,499 @@
 # VentureMind — Product Requirements Document (PRD)
 ## The AI Brain Behind Nomad Flow
-### Version 1.0 | May 2026
+### Version 2.0 | May 2026
 
 ---
 
-> **Who this document is for**: Founders, investors, advisors, partners, and any person who wants to understand exactly what VentureMind is, what it does, why it matters, and how it works — without reading a single line of code.
+> **Who this document is for**: Founders, investors, partners, and team members who want to understand what VentureMind is, how it works, and why every technical decision was made. No technical background required.
 
 ---
 
-# TABLE OF CONTENTS
+# Table of Contents
 
 1. [What Is VentureMind?](#1-what-is-venturemind)
-2. [The Problem We Solve](#2-the-problem-we-solve)
-3. [The Solution: Swarm of Swarms](#3-the-solution-swarm-of-swarms)
-4. [The 10 Swarms: What Each One Does](#4-the-10-swarms-what-each-one-does)
-5. [The Journey: How a Founder Uses VentureMind](#5-the-journey-how-a-founder-uses-venturemind)
-6. [Safety, Trust, and Legal Protection](#6-safety-trust-and-legal-protection)
-7. [How We Keep Your Data Safe](#7-how-we-keep-your-data-safe)
-8. [Business Model: How We Make Money](#8-business-model-how-we-make-money)
-9. [Roadmap: How We Build This](#9-roadmap-how-we-build-this)
-10. [The Team Structure (The Swarms)](#10-the-team-structure-the-swarms)
-11. [Glossary](#11-glossary)
+2. [What Problem Does It Solve?](#2-what-problem-does-it-solve)
+3. [The Ten Service Pillars](#3-the-ten-service-pillars)
+4. [The Ten AI Swarms](#4-the-ten-ai-swarms)
+5. [How a Founder Uses VentureMind](#5-how-a-founder-uses-venturemind)
+6. [The Three Operating Modes](#6-the-three-operating-modes)
+7. [The Technology Partners Explained](#7-the-technology-partners-explained)
+8. [Security and Protection](#8-security-and-protection)
+9. [The Compliance Auditor — Your Protection Layer](#9-the-compliance-auditor--your-protection-layer)
+10. [How We Validate Everything We Build](#10-how-we-validate-everything-we-build)
+11. [Business Model and Revenue](#11-business-model-and-revenue)
+12. [Roadmap](#12-roadmap)
+13. [Glossary](#13-glossary)
 
 ---
 
-# 1. WHAT IS VENTUREMIND?
+# 1. What Is VentureMind?
 
-## 1.1 The Short Version
+VentureMind is the **artificial intelligence brain** that powers **Nomad Flow** — a platform designed for founders and entrepreneurs who want to build, run, and grow their business from anywhere in the world.
 
-**VentureMind is an AI assistant that helps founders start and run their entire business internationally — from registering a company and opening a bank account, to paying less tax and finding investors.**
+Think of it this way: when a founder starts a company today, they need to figure out a dozen different things simultaneously — where to register their company, how to pay less tax, how to open a business bank account, how to handle their taxes, how to get residency in another country, how to accept payments from clients, how to raise money, and how to protect their assets. Most founders have to hire separate experts for each of these things, pay thousands of dollars in fees, and manage all the communication between them.
 
-Instead of hiring a lawyer, an accountant, a business consultant, and a tax advisor — VentureMind replaces all of them with one intelligent platform that works 24 hours a day, 7 days a week, never forgets anything, and never sleeps.
+**VentureMind is the single AI platform that handles all of this — automatically.**
 
-## 1.2 The Long Version
-
-VentureMind is the "AI brain" powering a larger platform called **Nomad Flow**. Think of it like this:
-
-- **Nomad Flow** is the product founders see and use — the website, the app, the dashboards.
-- **VentureMind** is the intelligence inside Nomad Flow — the part that actually thinks, plans, researches, and coordinates.
-
-Nomad Flow is what you see on the surface. VentureMind is what makes it smart.
-
-VentureMind is built as a **"Swarm of Swarms"** — ten independent AI teams, each specialized in one specific area of running a global business. One swarm handles legal work. Another handles taxes. Another handles finding funding. Another handles travel and residency. And so on.
-
-These swarms don't work in isolation — they are coordinated by a central AI "executive" that makes sure everything works together, that nothing is missed, and that every decision is logged for audit purposes.
+Instead of hiring a lawyer, an accountant, a tax advisor, a business formation agent, a crypto specialist, and a financial planner separately, a founder has one intelligent system that coordinates everything.
 
 ---
 
-# 2. THE PROBLEM WE SOLVE
+# 2. What Problem Does It Solve?
 
-## 2.1 The Founder's Nightmare
+## The Problem We Solve
 
-When a founder decides to build a global business, they face a terrifying amount of complexity:
+Founders building internationally face five compounding challenges:
 
-| Task | Who They Need | Average Cost | Average Time |
-|------|--------------|-------------|-------------|
-| Register a company in another country | Business lawyer | $2,000–$10,000 | 2–8 weeks |
-| Open a business bank account | Bank + lawyer | $500–$3,000 | 4–12 weeks |
-| Set up tax strategy | Tax accountant | $1,000–$5,000 | 1–4 weeks |
-| Apply for residency/visa | Immigration lawyer | $2,000–$15,000 | 3–6 months |
-| Find investors | Business broker/advisor | $10,000–$50,000 | 3–12 months |
-| Build a website/app | Development team | $5,000–$200,000 | 1–12 months |
-| Set up crypto banking | Crypto financial advisor | $1,000–$5,000 | 2–8 weeks |
+### Problem 1: Fragmentation
+Every service a founder needs exists in a separate company. LegalZoom handles company formation. Stripe handles payments. An accountant handles taxes. A separate firm handles residency. None of them talk to each other. The founder becomes the central hub connecting all of them — and that is a full-time job.
 
-**The total cost to start a proper global business the traditional way: $20,000–$300,000+ before a single dollar of revenue.**
+**What VentureMind does**: We integrate all of these services into one intelligent system. The founder talks to one platform. VentureMind coordinates everything behind the scenes.
 
-And even after spending all that money, founders face:
-- **Fragmented advice**: The lawyer doesn't talk to the accountant. The accountant doesn't know what the investor is planning. Nothing is connected.
-- **Outdated information**: Laws change constantly. The advice from last year may be wrong today.
-- **Human error and forgetfulness**: Humans miss deadlines. They lose track of documents. They have conflicts of interest.
-- **No accountability**: When something goes wrong, the founder has no one to blame and no record of who said what.
+### Problem 2: Information Overload
+There are 195 countries in the world. Each has different company structures, tax rates, banking rules, and residency requirements. The "best" answer changes depending on the founder's nationality, income type, business model, long-term plans, and risk tolerance. No single advisor has all the answers. Most give advice based on what they know, not what is globally optimal.
 
-## 2.2 The Market Opportunity
+**What VentureMind does**: Our AI researches every jurisdiction simultaneously and recommends the optimal structure for the founder's specific situation — not a generic solution.
 
-There are approximately **500 million entrepreneurs** globally who need international business infrastructure. The global market for business formation, tax advisory, and compliance services is worth over **$800 billion per year**.
+### Problem 3: Execution Gap
+Most advisors give advice and leave. The founder still has to do the paperwork, file the forms, open the accounts, and make the decisions. This is where most plans fall apart — the execution phase.
 
-Every single one of these founders faces the same problems. No existing platform solves all of them simultaneously. They are all fragmented.
+**What VentureMind does**: Our Green Button system allows the AI to actually execute tasks on behalf of the founder — filing documents, opening accounts, moving money — with human approval checkpoints built in for safety.
+
+### Problem 4: Security and Trust
+When you hand sensitive documents (passport, tax records, bank statements) to a platform, how do you know they are protected? Most platforms store this data in plain text on servers. One breach exposes everything.
+
+**What VentureMind does**: We use a Zero-Knowledge Vault system — your documents are encrypted so that even if someone hacks our servers, they cannot read your data. You hold the key. We never see it.
+
+### Problem 5: Regulatory Risk
+Tax laws change. Residency rules change. What is legal today may not be legal tomorrow. A founder operating internationally needs to constantly monitor regulatory changes or risk penalties, fines, or legal action.
+
+**What VentureMind does**: Our Compliance Auditor Agent monitors every recommendation against current regulations in real time and can freeze the entire system if a violation is detected.
 
 ---
 
-# 3. THE SOLUTION: SWARM OF SWARMS
+# 3. The Ten Service Pillars
 
-## 3.1 What Does "Swarm of Swarms" Mean?
+VentureMind's services are organized into ten pillars — each represents a major category of what a founder needs:
 
-Imagine you have ten different expert assistants, each one specialized in one specific area of your business:
+| # | Pillar | What It Covers |
+|---|--------|---------------|
+| 1 | **Ideation** | Validating business ideas, market research, competitor analysis |
+| 2 | **Legal Formation** | Company registration, IBC structures, LLC formation, nominee director services |
+| 3 | **Nomad Navigator** | Residency-by-investment programs, digital nomad visas, citizenship-by-investment |
+| 4 | **Luxury Optimizer** | Premium banking, wealth management, lifestyle services (concierge, travel) |
+| 5 | **Health Intelligence** | International health insurance, medical evacuation, telemedicine access |
+| 6 | **Tax Optimization** | Structure recommendations, treaty network analysis, filing support |
+| 7 | **Crypto Services** | Exchange setup, multi-sig wallet management, DeFi integration |
+| 8 | **Entity Formation** | Company registration in optimal jurisdiction (UAE, BVI, Cayman, Wyoming, Singapore) |
+| 9 | **Capital Raise** | Investor introductions, pitch deck optimization, due diligence preparation |
+| 10 | **Financial Accounting** | Bookkeeping, financial reporting, accounting system setup |
 
-- One assistant knows everything about law.
-- One assistant knows everything about taxes.
-- One assistant knows everything about finding investors.
-- One assistant knows everything about building software.
-- And so on.
+---
 
-Now imagine those ten assistants are not humans — they are AI agents that can work 24/7, never forget anything, never make silly mistakes from tiredness, and can communicate with each other instantly.
+# 4. The Ten AI Swarms
 
-That is a **"Swarm"** — a team of AI agents working together.
+The core of VentureMind is a system we call the **Swarm of Swarms** — ten autonomous AI teams, each specialized in one domain. Together, they work like the departments of a company, but they are all AI agents that can communicate, coordinate, and execute tasks.
 
-Now imagine those ten swarms are themselves coordinated by an **11th AI** — a central executive that assigns tasks, tracks progress, makes sure nothing falls through the cracks, and escalates to a human when something is too risky or too important.
+Think of it like this: instead of hiring ten different agencies or software tools, you have ten AI teams inside VentureMind, all working together under one coordinator.
 
-That is **"Swarm of Swarms"** — the architecture that powers VentureMind.
+Here are all ten swarms:
 
-## 3.2 The Architecture Diagram
+### The Central Swarm (The Executive)
+The boss. Coordinates all other swarms. Decides which swarm handles which task. Escalates to human experts when needed. **This is the brain of the brain.**
+
+### The Engineering Swarm (The Builder)
+Builds and ships software products. Handles website development, app development, API integrations, and technical infrastructure. **This is your in-house engineering team.**
+
+### The Legal Swarm (The Protector)
+Handles all legal work — company formation, contract review, regulatory compliance, intellectual property protection. **This is your in-house legal team.**
+
+### The Financial Swarm (The Accountant)
+Manages bookkeeping, financial reporting, tax preparation, and tax optimization strategy. **This is your in-house accountant and tax advisor.**
+
+### The Capital Swarm (The Fundraiser)
+Helps raise money — from angel investors, VCs, or alternative sources. Prepares pitch materials, finds investors, manages cap tables. **This is your in-house fundraising team.**
+
+### The Growth Swarm (The Marketer)
+Handles brand strategy, content marketing, SEO, social media, paid advertising, and growth experiments. **This is your in-house marketing team.**
+
+### The Web3 Swarm (The Crypto Expert)
+Manages cryptocurrency operations — exchange accounts, multi-signature wallets, DeFi strategies, token launches. **This is your in-house crypto specialist.**
+
+### The Wealth Swarm (The Wealth Manager)
+Long-term asset allocation, investment strategy, retirement planning, portfolio rebalancing. **This is your in-house wealth manager.**
+
+### The Mobility Swarm (The Relocation Agent)
+Handles everything about moving — residency applications, visa processing, international logistics, flight booking, accommodation. **This is your in-house relocation specialist.**
+
+### The Journey Swarm (The Life Architect)
+Helps founders design their ideal lifestyle internationally — from healthcare to schooling to banking to social networks. **This is your life strategist.**
+
+---
+
+# 5. How a Founder Uses VentureMind
+
+## Step 1: Intake Interview (5 minutes)
+The founder opens VentureMind and is greeted by the **Onboard Assistant** — a friendly, structured interview. It asks about:
+- What the founder wants to build
+- Their nationality and current location
+- Their income type and expected revenue
+- Whether they have existing companies or structures
+- Their short-term and long-term goals
+
+This interview is adaptive — it asks follow-up questions based on answers, like a smart doctor taking a medical history.
+
+## Step 2: The Deep Research Phase (AI Working)
+VentureMind takes the founder's answers and runs parallel research across all relevant domains:
+- Legal structures in the optimal jurisdiction for their situation
+- Tax treaty advantages and obligations
+- Banking requirements and available providers
+- Residency program eligibility
+- Regulatory compliance requirements
+
+Every finding is verified against primary sources (government websites, official tax codes, legal databases). Low-confidence findings are flagged for human review.
+
+## Step 3: The Strategy Document (Founder Reviews)
+The founder receives a complete strategy document — written in plain language — that covers:
+- Recommended company structure (e.g., UAE IBC + Wyoming LLC)
+- Tax optimization strategy with treaty citations
+- Banking setup plan
+- Residency or travel optimization
+- Risk factors and how they are mitigated
+- A step-by-step execution roadmap
+
+## Step 4: The Green Button (Execution Begins)
+The founder reviews the strategy and presses the **Green Button** to authorize execution. From this point, VentureMind can:
+- File company formation documents
+- Open bank accounts (with human checkpoints for large transfers)
+- Set up crypto wallets
+- Register for tax programs
+- Coordinate with vetted human lawyers and accountants in our network
+
+## Step 5: Ongoing Management (Always On)
+After setup, VentureMind continuously:
+- Monitors regulatory changes in all relevant jurisdictions
+- Alerts the founder to compliance deadlines
+- Optimizes tax positions as laws change
+- Tracks financial performance
+- Coordinates with the founder's human advisors
+- Executes routine tasks autonomously
+
+---
+
+# 6. The Three Operating Modes
+
+VentureMind operates in three modes depending on the situation:
+
+## Mode 1: Advise (Advisory)
+The AI researches, recommends, and guides. The founder makes all decisions. The AI provides information, analysis, and options. **This is the default mode for strategy and planning.**
+
+## Mode 2: Authorise (Co-Piloted)
+The AI executes tasks with explicit founder approval at key checkpoints. The founder reviews and approves major decisions before the AI proceeds. **This is the mode for document filing, account opening, and financial setup.**
+
+## Mode 3: Execute (Autonomous)
+The AI operates independently within defined boundaries — executing routine tasks, monitoring compliance, managing cash flow, rebalancing portfolios — without requiring constant human approval. Hard limits (financial thresholds, legal boundaries) are always enforced. **This is the mode for ongoing operations after initial setup.**
+
+The founder can switch between modes at any time and can set different modes for different swarms.
+
+---
+
+# 7. The Technology Partners Explained
+
+VentureMind was built by integrating four powerful open-source AI systems. Here is a plain-language explanation of each one:
+
+---
+
+## Paperclip (The Company Organizer)
+
+**What it is**: Paperclip is an open-source platform that turns AI agents into a structured company with departments, roles, and hierarchies. It was created by the team at paperclipai.
+
+**Think of it as**: An AI company builder. Instead of a human CEO managing employees, Paperclip manages AI agents the same way — with org charts, job descriptions, budgets, and scheduled tasks.
+
+**Why we use it**: VentureMind has ten different AI swarms (departments). Paperclip gives each swarm a defined role, a boss, a budget, and a schedule — just like a real company. This means every swarm knows what it is responsible for, who it reports to, and what it should be doing each day.
+
+**What this means for the founder**: Your AI works like a well-organized team, not a random collection of tools. The right specialist handles the right task automatically.
+
+**Repository**: https://github.com/paperclipai/paperclip
+**Who made it**: PaperclipAI team
+**License**: MIT (free to use and modify)
+
+---
+
+## gstack by Garry Tan (The Engineering Factory)
+
+**What it is**: gstack is a set of 23 engineering tools created by Garry Tan, the CEO of Y Combinator (the world's most famous startup accelerator). These tools give any AI the ability to act like a full engineering department — with a CEO, an engineering manager, a designer, a QA tester, a security auditor, and a release manager.
+
+**Think of it as**: Giving the AI the skills of twenty different engineers, all working together on your product.
+
+**Why we use it**: When VentureMind needs to build something for a founder — a website, an app, an integration, a landing page — the Engineering Swarm uses gstack to operate like a professional software company. The AI can plan architecture, write code, review its own work, run security checks, and deploy to production — without human intervention.
+
+**What this means for the founder**: When you need a landing page, a web app, or a new feature built, VentureMind can build it — not just recommend it.
+
+**Repository**: https://github.com/garrytan/gstack
+**Who made it**: Garry Tan (Y Combinator CEO)
+**License**: MIT
+
+---
+
+## Feynman (The Research Brain)
+
+**What it is**: Feynman is an AI research agent framework created by the team at getcompanion-ai. It is designed to conduct deep, multi-source research on complex topics — searching academic papers, government websites, legal databases, and news sources simultaneously — and producing reports with full citations.
+
+**Think of it as**: A world-class research librarian who never gets tired, never misses a source, and always cites their work.
+
+**Why we use it**: For any complex question in VentureMind — "What is the optimal tax structure for a US citizen earning freelance income from European clients?" — Feynman agents conduct thorough, multi-source research and produce a verified brief with citations to primary sources. This means the founder always gets research-backed advice, not guesswork.
+
+**What this means for the founder**: Every recommendation VentureMind makes is backed by verified research from official sources — not pulled from a chatbot's training data.
+
+**Repository**: https://github.com/getcompanion-ai/feynman
+**Who made it**: getcompanion-ai team
+**License**: MIT
+
+---
+
+## agent-skills-eval (The Quality Controller)
+
+**What it is**: agent-skills-eval is an open-source evaluation framework created by darkrishabh that tests whether an AI skill actually works. It runs each skill twice — once with the skill loaded and once without — and uses a judge AI to compare the results and score how much the skill actually helped.
+
+**Think of it as**: A quality control inspector that runs every tool through a test before letting it work on real tasks.
+
+**Why we use it**: We have built custom skills for VentureMind — the SafetyNet Protocol, the Orchestrator, the Green Button System, the Zero-Knowledge Vault. Before we let these skills operate on real founder data, agent-skills-eval runs them through rigorous tests to prove they work correctly. This prevents faulty logic from reaching real users.
+
+**What this means for the founder**: The system that handles your legal, financial, and personal data has been tested and verified before it touches your information. Every skill has empirical evidence of correctness.
+
+**Repository**: https://github.com/darkrishabh/agent-skills-eval
+**Who made it**: darkrishabh
+**License**: MIT
+
+---
+
+## How All Four Work Together
+
+Here is how these four systems work together inside VentureMind:
 
 ```
-                    ┌─────────────────────────────────────────┐
-                    │          THE FOUNDER (You)              │
-                    └──────────────────┬──────────────────────┘
-                                       │
-                                       │ (asks a question)
-                                       ▼
-                    ┌─────────────────────────────────────────┐
-                    │    CENTRAL SWARM LEAD (The Executive)    │
-                    │   "Chief of Staff" AI that coordinates   │
-                    └──────────────────┬──────────────────────┘
-                                       │
-          ┌──────────┬──────────┼──────────┼──────────┬──────────┐
-          │          │          │          │          │          │
-          ▼          ▼          ▼          ▼          ▼          ▼
-    ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐
-    │Engineering│ │  Legal   │ │Financial  │ │ Capital   │ │  Growth  │
-    │  Swarm   │ │  Swarm   │ │  Swarm    │ │  Swarm    │ │  Swarm   │
-    │(Web, App,│ │(Entity,  │ │(Tax, Ac-  │ │(Investor  │ │(Marketing│
-    │ DevOps)  │ │Contract, │ │counting)  │ │Outreach,  │ │Campaigns,│
-    │          │ │ KYC)     │ │          │ │ Deals)    │ │Content)  │
-    └──────────┘ └──────────┘ └──────────┘ └──────────┘ └──────────┘
-          │          │          │          │          │
-          ▼          ▼          ▼          ▼          ▼
-    ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐
-    │  Web3    │ │  Wealth  │ │ Mobility │ │  Journey │ │          │
-    │  Swarm   │ │  Swarm   │ │  Swarm   │ │  Swarm   │ │ (more)   │
-    │(Crypto,  │ │(Personal │ │(Banking, │ │(Residency│ │          │
-    │ Wallet,  │ │Invest-   │ │Flights,  │ │Visa,     │ │          │
-    │ Exchange)│ │ments)    │ │Insurance)│ │Travel)   │ │          │
-    └──────────┘ └──────────┘ └──────────┘ └──────────┘ └──────────┘
-```
-
-## 3.3 How the Swarms Talk to Each Other
-
-Each swarm has its own memory and knowledge base. The Engineering Swarm does not try to do tax work. The Financial Swarm does not try to write code. They each stay in their lane.
-
-When a swarm needs information from another domain, it sends a request through the **Central Swarm Lead** — just like a human executive assistant would coordinate between departments.
-
-Every single decision made by any swarm is logged in an **Audit Log** — an immutable record of exactly what was decided, why, when, and what confidence the AI had in the decision.
-
----
-
-# 4. THE 10 SWARMS: WHAT EACH ONE DOES
-
-## 4.1 Engineering Swarm — "The Builder"
-
-**What it does**: Builds your website, app, and software infrastructure.
-
-**Sub-agents**:
-- **Architect Agent**: Designs the technical blueprint — which technologies to use, how the system should be structured.
-- **DevOps Agent**: Manages the infrastructure — servers, cloud services, deployment pipelines, security updates.
-- **Full-Stack Agent**: Writes the actual code — frontend (what users see) and backend (how it works behind the scenes).
-
-**Example tasks**:
-- "Build me a landing page for my new consulting business."
-- "Set up an email automation system for my newsletter."
-- "Create a dashboard where my clients can see their tax status."
-
----
-
-## 4.2 Legal Swarm — "The Protector"
-
-**What it does**: Handles everything related to law, contracts, and compliance.
-
-**Sub-agents**:
-- **Entity Formation Agent**: Decides which legal structure is best (LLC, Corporation, IBC, etc.) and handles registration.
-- **Contract Drafting Agent**: Writes and reviews contracts — client agreements, partnership agreements, employment contracts.
-- **KYC (Know Your Customer) Agent**: Verifies identities, runs compliance checks, manages anti-money-laundering requirements.
-- **Compliance Auditor Agent**: Continuously monitors that the business stays compliant with regulations across all relevant jurisdictions.
-
-**Example tasks**:
-- "Should I register my company in Wyoming, Delaware, or the UAE?"
-- "I need a contract for a client in Europe — what clauses do I need?"
-- "My business is now in three countries — what compliance do I need in each?"
-
----
-
-## 4.3 Financial Swarm — "The Accountant"
-
-**What it does**: Manages taxes, bookkeeping, and financial planning.
-
-**Sub-agents**:
-- **Tax Strategist Agent**: Identifies legal ways to reduce your tax burden across jurisdictions.
-- **Bookkeeping Agent**: Tracks income, expenses, invoices, and financial records.
-- **Tax Filing Agent**: Prepares and submits tax returns for multiple jurisdictions.
-- **IRS/Authority Defense Agent**: If you are audited or face a tax dispute, this agent coordinates the response.
-
-**Example tasks**:
-- "I made $200,000 this year. What's the best way to legally pay the least tax?"
-- "I have income from the US, UK, and Nigeria. How do I file in all three?"
-- "My accountant sent me this document — can you explain what it means?"
-
----
-
-## 4.4 Capital Swarm — "The Investor"
-
-**What it does**: Helps raise money and manage investor relationships.
-
-**Sub-agents**:
-- **Investor Research Agent**: Identifies potential investors who fit your business type, stage, and industry.
-- **Pitch Preparation Agent**: Helps craft the perfect pitch deck and investor presentation.
-- **Due Diligence Agent**: Prepares the financial and legal due diligence materials investors expect.
-- **Investor Relations Agent**: Manages ongoing communication with investors post-funding.
-
-**Example tasks**:
-- "Who should I pitch to if I'm raising $500,000 for my fintech startup?"
-- "Help me create a pitch deck for angel investors."
-- "What due diligence documents will investors need from me?"
-
----
-
-## 4.5 Growth Swarm — "The Voice"
-
-**What it does**: Handles marketing, content, and brand building.
-
-**Sub-agents**:
-- **Content Strategist Agent**: Plans what content to create and when.
-- **SEO Agent**: Optimizes your website and content to rank on Google.
-- **Social Media Agent**: Manages your presence on LinkedIn, Twitter, Instagram, etc.
-- **Campaign Agent**: Designs and runs paid advertising campaigns.
-
-**Example tasks**:
-- "What should I post on LinkedIn to attract fintech investors?"
-- "How do I get my website to rank #1 on Google for 'crypto-friendly business bank'?"
-- "Create a 90-day content calendar for my consulting business."
-
----
-
-## 4.6 Web3 Swarm — "The Decentralist"
-
-**What it does**: Handles everything related to cryptocurrency, blockchain, and decentralized finance.
-
-**Sub-agents**:
-- **Custody Agent**: Manages exchange setup and secure wallet infrastructure.
-- **DeFi Agent**: Identifies opportunities in decentralized finance (lending, staking, liquidity pools).
-- **Tokenomics Agent**: If you are building a token or crypto project, this agent designs the economic model.
-- **NFT/DAO Agent**: Manages NFT collections or DAO governance structures.
-
-**Example tasks**:
-- "I want to accept Bitcoin as payment for my consulting business. How do I set that up?"
-- "Should I store my company treasury in a multi-sig wallet? Which one?"
-- "What are the tax implications of holding Ethereum as a business asset in the UAE?"
-
----
-
-## 4.7 Wealth Swarm — "The Wealth Architect"
-
-**What it does**: Manages personal and business investments and financial growth.
-
-**Sub-agents**:
-- **Portfolio Planner Agent**: Creates long-term investment strategies based on your risk profile.
-- **Asset Allocation Agent**: Decides how to divide investments across stocks, bonds, real estate, crypto, etc.
-- **Legacy Planning Agent**: Manages estate planning, trusts, and inheritance structures.
-- **Risk Assessment Agent**: Continuously monitors your financial exposure and suggests hedging strategies.
-
-**Example tasks**:
-- "I have $100,000 to invest. What's the best strategy for a US-based founder living in Dubai?"
-- "Should I buy real estate in Portugal or the UAE for my second residency?"
-- "How do I protect my wealth if I'm traveling to high-risk countries?"
-
----
-
-## 4.8 Mobility Swarm — "The Concierge"
-
-**What it does**: Handles everything about physical movement — travel, logistics, and lifestyle infrastructure.
-
-**Sub-agents**:
-- **Banking Access Agent**: Identifies and applies for the best business bank accounts globally.
-- **Flight Agent**: Finds the best flight deals, books travel, manages loyalty programs.
-- **Insurance Agent**: Identifies optimal health, travel, and business insurance globally.
-- **Lifestyle Agent**: Finds apartments, co-working spaces, restaurants, and services in any city.
-
-**Example tasks**:
-- "What's the best business bank account for a US entrepreneur living abroad?"
-- "I need to fly from Shanghai to New York next week — find me the best option."
-- "I just moved to Lisbon. Where should I work from and what gyms are nearby?"
-
----
-
-## 4.9 Journey Swarm — "The Path Builder"
-
-**What it does**: Manages residency, visa, immigration, and citizenship-by-investment programs.
-
-**Sub-agents**:
-- **Visa Navigator Agent**: Identifies the best visa pathways for your specific situation.
-- **Residency Agent**: Manages the application process for residency permits.
-- **Citizenship Agent**: If you are pursuing a second citizenship through investment, this agent coordinates the full process.
-- **Immigration Defense Agent**: Handles disputes, rejections, or appeals with immigration authorities.
-
-**Example tasks**:
-- "I'm a Zimbabwean national. What's the fastest way to get a European residency permit?"
-- "I want to spend 6 months in the UAE and 6 months in Portugal. What visa do I need for each?"
-- "Is the UAE golden visa worth it for a tech founder? What are the requirements?"
-
----
-
-## 4.10 Central Swarm — "The Executive"
-
-**What it does**: The boss of all swarms. Coordinates everything.
-
-**Sub-agents**:
-- **Strategy Agent**: Takes your raw idea and turns it into a structured, prioritized plan of action.
-- **Operator Agent**: Routes questions and tasks to the right swarm and tracks progress across all domains.
-- **Talent Agent**: Monitors the quality of outputs across all swarms and flags issues.
-
-**This swarm does not do legal, tax, or marketing work itself — it makes sure the other swarms do their jobs correctly and in the right order.**
-
----
-
-# 5. THE JOURNEY: HOW A FOUNDER USES VENTUREMIND
-
-## 5.1 The Structured Discovery Phase (Week 1)
-
-When you first sign up, VentureMind doesn't just ask "How can I help you?" It guides you through a structured intake process.
-
-### Step 1: The Strategist Interview
-VentureMind asks you a series of questions to understand exactly who you are, what you want, and what your situation looks like. This is called the **Strategist Agent** — an AI that asks smart, branching questions.
-
-Sample questions include:
-- "What is your nationality?"
-- "Where do you currently live and pay tax?"
-- "What type of business do you want to run?"
-- "How much revenue do you expect in year one?"
-- "Have you already registered a company anywhere in the world?"
-- "What is your risk tolerance for tax optimization?"
-- "Do you need residency in a specific country?"
-
-This is not a simple form. It adapts based on your answers — if you say "I want to start a fintech company," it asks follow-up questions about financial licenses. If you say "I want to live in the UAE," it asks about your current visa status.
-
-### Step 2: Document Collection
-VentureMind asks you to upload relevant documents:
-- Passport
-- Proof of address
-- Existing company registration documents
-- Tax records
-- Any existing contracts
-
-All documents are encrypted immediately and stored using **Zero-Knowledge Encryption** — which means no one at VentureMind, no hacker, and no government can read your documents without your explicit permission. (See Section 7 for full details.)
-
-### Step 3: Competitive Research
-Once VentureMind understands your business, it runs parallel research across:
-- Your direct competitors
-- Legal requirements in your target jurisdictions
-- Tax treaty networks relevant to your structure
-- Market sizing and opportunity analysis
-
-### Step 4: The Founder Profile
-All of this information is compiled into your **Founder Profile** — a comprehensive, living document that VentureMind references for every future decision. It includes:
-- Your goals and risk tolerance
-- Your current legal and financial situation
-- Your target jurisdictions
-- Your timeline and milestones
-- A confidence score for your overall plan (anything below 70% triggers a human review)
-
-## 5.2 The Research Phase (Week 2)
-
-With the Founder Profile in hand, VentureMind's research agents go to work:
-
-**Simultaneously**, the platform runs four parallel research tracks:
-
-1. **Legal Intelligence**: What are the exact legal requirements for your business in each target country?
-2. **Tax Intelligence**: What tax treaties apply? Where can you legally reduce your burden?
-3. **Market Intelligence**: Who are your competitors? What is the market size?
-4. **Operational Intelligence**: What bank accounts, payment processors, and service providers do you need?
-
-Everything is verified against primary sources (government websites, official treaties, published regulations). If any claim cannot be verified, it is flagged with a warning.
-
-## 5.3 The Planning Phase (Week 3)
-
-VentureMind synthesizes all research into a **Founder Roadmap** — a structured plan that answers:
-
-- Which company to register, where, and why
-- Which bank accounts to open, and in what order
-- Which tax structure to use
-- Which visa or residency pathway to pursue
-- What the monthly operating cost will be
-- What the expected year-one revenue should be
-- What the top 3 risks are and how they are mitigated
-
-This roadmap is written in plain language — no jargon, no legalese, no technical complexity.
-
-## 5.4 The Execution Phase — "The Green Button" (Week 4 onwards)
-
-This is where VentureMind moves from **"advice"** to **"execution."**
-
-Once you approve your Founder Roadmap, you can authorize specific actions with your **Green Button** — a secure, cryptographically signed command that tells VentureMind to go execute a task on your behalf.
-
-### How the Green Button Works
-
-**Green Button commands** look like this:
-
-```
-EXECUTE: FORMATION(Wyoming_LLC) → BANKING(Mercury) → WALLET(Safe_MultiSig) → FUNDING(Stripe_Connect)
-```
-
-Each command has a **risk level**:
-
-| Risk Level | Color | What It Means |
-|------------|-------|---------------|
-| **Green** | Green | Low risk. AI executes automatically. Example: "Send my pitch deck to 10 investors." |
-| **Orange** | Orange | Medium risk. AI prepares everything and asks for your explicit approval before executing. |
-| **Red** | Red | High risk. AI prepares everything, your designated human advisor must also approve, and there is a 24-hour cooling-off period before execution. |
-| **CRIMSON** | Crimson | Maximum risk. Multi-signature required, 48-hour cooling period, and a human lawyer must countersign. |
-
-**Examples of Green Button executions**:
-
-| Command | Risk Level | What Happens |
-|---------|-----------|-------------|
-| "Register a Wyoming LLC" | Orange | VentureMind prepares the filing, shows you the exact documents, asks you to confirm, then submits. |
-| "Open a Mercury bank account" | Red | VentureMind prepares the application, your human advisor is notified to review, 24-hour hold, then submitted. |
-| "Wire $50,000 to a new partner" | CRIMSON | Multi-sig required, your lawyer is notified, 48-hour hold, then executed. |
-
-### The Human-in-the-Loop (HITL) System
-
-For anything involving real money or legal risk, VentureMind has a **SafetyNet** — a system that never lets an AI make irreversible decisions without human authorization.
-
-This protects you from:
-- AI hallucinations (when an AI confidently says something wrong)
-- Prompt injection attacks (when a malicious input tries to manipulate the AI)
-- Single points of failure
-- Regulatory violations
-
-## 5.5 Ongoing Operations (Month 2+)
-
-Once your business is running, VentureMind continues to operate in the background:
-
-- **Monthly Briefings**: Every month, you receive a structured briefing from the Central Swarm — what's due, what's changed, what needs attention.
-- **Proactive Alerts**: If a law changes in one of your jurisdictions, VentureMind alerts you within 24 hours with an explanation and recommended action.
-- **Quarterly Review**: Every quarter, your full Founder Profile is reviewed and updated based on your actual results vs. projected results.
-- **Continuous Optimization**: VentureMind continuously looks for opportunities to reduce your tax burden, improve your banking, and strengthen your legal structure.
-
----
-
-# 6. SAFETY, TRUST, AND LEGAL PROTECTION
-
-## 6.1 Why You Can Trust VentureMind's Advice
-
-### Source Verification
-Every piece of legal or tax advice generated by VentureMind is linked to a primary source:
-- Government websites (.gov, .gov.uk, etc.)
-- Official treaty documents (OECD, UN, etc.)
-- Published court rulings
-- Licensed legal databases
-
-If a claim cannot be verified against a primary source, it is clearly labeled as **"unverified — use with caution"** and does not count toward the plan's confidence score.
-
-### Confidence Scores
-Every recommendation comes with a **confidence score** from 0 to 1:
-
-- **0.90–1.00**: High confidence. This is well-established law. Proceed.
-- **0.70–0.89**: Medium confidence. This is the most likely interpretation, but there is some uncertainty. Your human advisor should review.
-- **0.50–0.69**: Low confidence. This is speculative. Human review is mandatory.
-- **Below 0.50**: VentureMind will not make this recommendation. It will flag it as "Insufficient Information" and escalate to a human expert.
-
-### The Audit Log
-Every single decision, question, and recommendation is logged in an **immutable audit trail**. This means:
-
-- If something goes wrong, we can trace exactly what was recommended, when, and why.
-- You have a complete record of every decision made on your behalf.
-- Regulators can be provided with a complete history if needed.
-- You can never be told "we recommended something different" — the log is the truth.
-
-## 6.2 Non-Negotiable Legal Clauses
-
-Before VentureMind provides any advice, every user must agree to two legal terms:
-
-1. **Limitation of Liability**: VentureMind provides guidance, not licensed legal or tax advice. A licensed human attorney or CPA should review all significant decisions. VentureMind is a tool, not a lawyer.
-
-2. **AI Disclaimer**: AI systems can make errors. All AI-generated advice should be verified by a qualified human before acting on it.
-
-These are non-negotiable. They appear prominently at signup and are re-displayed every time a CRIMSON-level action is authorized.
-
-## 6.3 Insurance and Bonding
-
-VentureMind maintains:
-- **Professional Liability Insurance** (E&O) covering advice errors
-- **Cyber Liability Insurance** covering data breaches
-- **Fiduciary Bond** covering mismanagement of client funds (for the Green Button execution layer)
-
----
-
-# 7. HOW WE KEEP YOUR DATA SAFE
-
-## 7.1 The Zero-Knowledge Architecture
-
-Your data is protected using **Zero-Knowledge Encryption** — the same technology used by the US military and the world's most secure financial institutions.
-
-Here is what this means in plain English:
-
-**Traditional system**: You send your passport to a server. The server decrypts it, stores it, and later someone with access reads it.
-
-**Zero-Knowledge system**: You encrypt your passport on your own device before sending it. The server receives it but **cannot decrypt it** — it is mathematically impossible without your key. When you need the document again, only you can decrypt it.
-
-Your encryption key is called the **Ghost Key**. It never leaves your device. It is not stored on our servers. It is not in our database. It does not exist anywhere except on your device.
-
-## 7.2 The Ghost Protocol
-
-The Ghost Protocol ensures that:
-
-1. **Client-Side Encryption**: All sensitive documents are encrypted in your browser before they are transmitted.
-2. **Isolated Storage**: Encrypted documents are stored in isolated, access-controlled storage with zero VentureMind employee access.
-3. **End-to-End Encryption**: Any document shared with a human advisor (lawyer, accountant) is decrypted only on their device — not on our servers.
-4. **No Training Data Use**: Your documents, your questions, and your business data are **never used to train any AI model**.
-
-## 7.3 The Watchdog Agent
-
-Independent of all other swarms, the **Watchdog Agent** is a security-focused AI that:
-- Monitors all system access logs 24/7
-- Alerts on unusual patterns (bulk downloads, unusual access times, etc.)
-- Triggers automatic account lockdown if a breach pattern is detected
-- Runs weekly penetration testing simulations
-- Produces a monthly **VentureMind Security Report** sent directly to you
-
-## 7.4 TEE (Trusted Execution Environment)
-
-For the highest-security operations (Green Button execution, multi-sig authorization), VentureMind uses **Trusted Execution Environments** — special hardware that creates a mathematically isolated execution environment. Even if a hacker gains root access to our servers, they cannot read or modify data inside the TEE.
-
----
-
-# 8. BUSINESS MODEL: HOW WE MAKE MONEY
-
-## 8.1 Subscription Tiers
-
-VentureMind operates on a tiered subscription model:
-
-| Tier | Name | Price | Best For |
-|------|------|-------|-----------|
-| **Tier 1** | Explorer | $99/month | Founders just starting out. Access to 3 swarms, basic legal entity research, and community access. |
-| **Tier 2** | Builder | $299/month | Founders with live businesses. Full swarm access, Green Button execution, up to 5 jurisdictions. |
-| **Tier 3** | Sovereign | $999/month | High-growth founders. Unlimited jurisdictions, priority processing, dedicated human advisor on-call, CRIMSON-level execution. |
-| **Tier 4** | Enterprise | Custom | Multi-entity groups. White-label options, API access, dedicated account manager. |
-
-## 8.2 Revenue Share
-
-When VentureMind successfully facilitates a funding round, investment, or acquisition for a founder:
-- VentureMind takes a **2–5% success fee** on the deal value
-- This is only charged if the deal closes
-- Tier 1 founders are exempt from success fees on their first deal
-
-## 8.3 Affiliate Revenue
-
-VentureMind earns referral fees from trusted service providers (banks, incorporation agents, insurance providers). These fees are:
-- Disclosed to you in every recommendation
-- Never influence the quality or objectivity of advice
-- Typically 0.5–2% of the transaction value
-
----
-
-# 9. ROADMAP: HOW WE BUILD THIS
-
-## Phase 1: Core Intelligence (Months 1–3)
-- Deploy Central Swarm Lead + Engineering Swarm
-- Build Structured Discovery intake system
-- Integrate Paperclip orchestration layer
-- Launch Tier 1 Explorer product to beta users
-
-## Phase 2: Full Swarm Deployment (Months 4–6)
-- Deploy all 10 domain swarms
-- Launch Green Button execution layer
-- Integrate KYC/AML compliance system
-- Launch Tier 2 Builder product
-
-## Phase 3: Autonomous Execution (Months 7–12)
-- Enable real bank account applications via API
-- Enable real company registration filings via API
-- Launch Tier 3 Sovereign product
-- Begin AI-to-AI deal flow with partner platforms
-
-## Phase 4: Global Scale (Year 2)
-- Expand to 50+ jurisdictions
-- Launch mobile app (iOS and Android)
-- Launch white-label product for accelerators and VCs
-- Target 10,000 active founders on platform
-
----
-
-# 10. THE TEAM STRUCTURE (THE SWARMS)
-
-## Organizational Chart
-
-```
-                    ┌──────────────────────┐
-                    │   RYAN MURANGARIRI   │
-                    │   (Founder / Owner)  │
-                    └──────────┬───────────┘
-                               │
-                    ┌──────────▼───────────┐
-                    │  CENTRAL SWARM LEAD  │
-                    │  "Chief of Staff"    │
-                    │  Strategy + Routing  │
-                    └──────────┬───────────┘
-                               │
-     ┌──────────┬──────────────┼──────────────┬──────────┐
-     │          │              │              │          │
-┌────▼────┐ ┌──▼───┐   ┌─────▼────┐  ┌─────▼────┐ ┌──▼────┐
-│Engineering│ │Legal │   │Financial │  │ Capital  │ │Growth │
-│  Swarm    │ │Swarm │   │  Swarm   │  │  Swarm   │ │ Swarm │
-└──────────┘ └──────┘   └──────────┘  └──────────┘ └───────┘
-     │          │              │              │          │
-┌────▼────┐ ┌──▼───┐   ┌─────▼────┐  ┌─────▼────┐ ┌──▼────┐
-│Architect │ │Entity│   │Tax       │  │Investor  │ │Content│
-│DevOps    │ │Forma-│   │Strategist│  │Research  │ │SEO    │
-│FullStack │ │tion  │   │Bookkeep- │  │Pitch     │ │Social │
-│          │ │KYC   │   │ing       │  │Prep      │ │Campaign
-│          │ │Audit │   │Filing    │  │DueDilig- │ │       │
-│          │ │      │   │          │  │ence      │ │       │
-└──────────┘ └──────┘   └──────────┘  └──────────┘ └───────┘
-
-     ┌──────────┬──────────────┬──────────────┬──────────┐
-     │          │              │              │          │
-┌────▼────┐ ┌──▼────┐  ┌─────▼────┐  ┌─────▼────┐ ┌──▼────┐
-│  Web3   │ │ Wealth│   │ Mobility │  │ Journey  │ │Watchdog│
-│  Swarm  │ │ Swarm │   │  Swarm   │  │  Swarm   │ │ Agent │
-└─────────┘ └────────┘  └──────────┘  └──────────┘ └───────┘
+FOUNDER INPUT
+    │
+    ▼
+┌─────────────────────────────────────────────┐
+│           PAPERCLIP (The Organizer)          │
+│  Manages all agents like a company org chart │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐    │
+│  │ Legal    │ │ Tax      │ │ Capital  │    │
+│  │ Swarm    │ │ Swarm    │ │ Swarm    │    │
+│  └────┬─────┘ └────┬─────┘ └────┬─────┘    │
+│       │             │             │          │
+└───────┼─────────────┼─────────────┼──────────┘
+        │             │             │
+        ▼             ▼             ▼
+┌─────────────────────────────────────────────┐
+│        FEYNMAN (The Research Brain)          │
+│  Verifies every claim against primary sources │
+│  Produces cited, verified research briefs    │
+└─────────────────────────────────────────────┘
+        │
+        ▼
+┌─────────────────────────────────────────────┐
+│     AGENT-SKILLS-EVAL (The Quality Checker)  │
+│  Tests every skill before it reaches the user │
+└─────────────────────────────────────────────┘
+        │
+        ▼
+┌─────────────────────────────────────────────┐
+│      GSTACK (The Engineering Factory)         │
+│  Builds and ships software when needed       │
+└─────────────────────────────────────────────┘
+        │
+        ▼
+FOUNDER RECEIVES VERIFIED, EXECUTED RECOMMENDATION
 ```
 
 ---
 
-# 11. GLOSSARY
+# 8. Security and Protection
 
-| Term | Definition |
-|------|-----------|
-| **Agent** | A specialized AI that performs a specific task. Like a digital employee. |
-| **AML** | Anti-Money Laundering — regulations to prevent criminals from using businesses to hide illegal money. |
-| **Audit Log** | An immutable record of every decision made by the AI, including when, why, and with what confidence. |
-| **COMPANY.md** | The master configuration file that defines the entire VentureMind company structure for the Paperclip orchestration system. |
-| **Confidence Score** | A number between 0 and 1 that tells you how sure the AI is about a recommendation. |
-| **CRIMSON Level** | The highest risk level. Requires multi-signature, lawyer approval, and 48-hour cooling. |
-| **Discovery Phase** | The structured intake process where VentureMind learns everything about you before making any recommendations. |
-| **Domain Lead** | The senior AI agent in each swarm who manages the sub-agents and reports to the Central Swarm. |
-| **EDD** | Enhanced Due Diligence — extra scrutiny applied to high-risk users or transactions. |
-| **Feynman** | The research intelligence layer — an AI that verifies facts, finds sources, and checks for errors. |
-| **Founder Profile** | A comprehensive living document that captures everything VentureMind knows about you and your goals. |
-| **Ghost Key** | Your personal encryption key. It never leaves your device and is mathematically impossible to recover from our servers. |
-| **Ghost Protocol** | The data security system that ensures your documents are encrypted and inaccessible to everyone except you. |
-| **Green Button** | The secure command interface that lets you authorize AI actions with different risk levels. |
-| **gstack** | A set of 23 engineering tools that give an AI the equivalent skills of a full engineering team. |
-| **HITL** | Human-in-the-Loop — the system that ensures a human approves certain actions before the AI executes them. |
-| **IBC** | International Business Company — a type of offshore company with special tax and privacy benefits. |
-| **KYC** | Know Your Customer — the process of verifying who you are before providing services. |
-| **LLC** | Limited Liability Company — a US business structure that protects personal assets from business debts. |
-| **Nomad Flow** | The consumer-facing platform that founders interact with. VentureMind is the AI brain inside Nomad Flow. |
-| **Orchestrator** | The central AI that coordinates all swarms, manages state, and routes tasks. |
-| **Paperclip** | The platform that runs VentureMind as an autonomous company with org charts, budgets, and audit logs. |
-| **SafetyNet** | The overall safety framework that includes HITL triggers, Watchdog monitoring, and escalation protocols. |
-| **SAR** | Suspicious Activity Report — a mandatory report filed when a transaction looks like it might be money laundering. |
-| **Skill** | A defined capability that can be attached to any agent. Like giving an agent a specialized tool. |
-| **Swarm** | A team of specialized AI agents working together under a Domain Lead. |
-| **Swarm of Swarms** | The full VentureMind architecture — 10 domain swarms coordinated by a central executive swarm. |
-| **TEE** | Trusted Execution Environment — special secure hardware that isolates sensitive computations. |
-| **Zero-Knowledge Encryption** | A type of encryption where the server can store data without ever being able to read it. |
-| **agent-skills-eval** | A testing framework that validates whether each AI skill actually works as intended. |
+## The Hardened Sovereignty Model
+
+VentureMind's security is built on a principle called **Hardened Sovereignty** — meaning your data is protected in a way that makes it physically impossible for anyone (including us) to access it without your explicit, cryptographic participation.
+
+### Layer 1: Zero-Knowledge Architecture
+Your sensitive documents (passport, tax IDs, bank statements, contracts) are encrypted on your device before they ever reach our servers. We cannot read them. Our AI cannot read them. Even if our entire database is breached, your documents remain encrypted and unreadable.
+
+**How it works**: When you upload a document, your browser encrypts it using AES-256-GCM encryption (the same standard used by banks and militaries). The encryption key never leaves your device. Our server only stores and retrieves encrypted data — it never sees the plaintext.
+
+### Layer 2: TEE (Trusted Execution Environment)
+When the AI needs to process your sensitive data (for example, reading your passport to verify your identity), it does so inside a special secure area of the computer called a TEE. The TEE is physically isolated from the rest of the system — even our own engineers cannot access data inside it. After processing, the data is wiped from memory immediately.
+
+### Layer 3: Ghost Protocol (Key Ceremony)
+Every sensitive operation requires two independent systems to agree before execution. No single process, agent, or human can authorize a critical action alone. This prevents both external attackers and internal bad actors from taking over the system.
+
+### Layer 4: Distributed Key Architecture
+Your encryption key is split into three parts:
+- One held on your personal device
+- One held in the TEE
+- One held in the immutable audit log
+
+All three must be present to decrypt any data. Lose your device? The system is still protected because the other two keys prevent unauthorized access. Attempt a breach? All three parts are required — physically impossible without all three simultaneously.
 
 ---
 
-# DOCUMENT INFORMATION
+# 9. The Compliance Auditor — Your Protection Layer
 
-| Field | Value |
-|-------|-------|
-| **Document Name** | VentureMind — Product Requirements Document |
-| **Version** | 1.0 |
-| **Date** | May 9, 2026 |
-| **Prepared By** | VentureMind Technical Team |
-| **Prepared For** | Ryan Murangariri (Founder) |
-| **Classification** | Internal / Shareable |
-| **Total Pages** | Approximately 45 |
+The **Compliance Auditor** is the most important agent in the VentureMind ecosystem. It is an autonomous AI that acts as the organization's legal and security department — and it cannot be overridden, bypassed, or silenced.
+
+### What the Compliance Auditor Does
+
+**1. Verifies Every Recommendation**
+Before any advice reaches you, the Compliance Auditor checks:
+- Is the information sourced from an official, authoritative government source?
+- Is the advice current — or has the law changed since the recommendation was made?
+- Does the advice apply specifically to your nationality and jurisdiction?
+
+If the answer to any of these is uncertain, the advice is **blocked** until a human expert reviews it. You will never receive advice that our system is not confident about.
+
+**2. Enforces Human Checkpoints**
+For any financial transaction above a set threshold, the Compliance Auditor requires human approval. This is called the **Green Button** system — you are always in control, and the AI cannot move large amounts of money without your explicit sign-off.
+
+**3. Detects and Blocks Prompt Attacks**
+Hackers sometimes try to manipulate AI systems by sending them specially crafted messages designed to make the AI ignore its safety rules. The Compliance Auditor detects these attacks in real time and immediately freezes the affected part of the system.
+
+**4. Knows Every Jurisdiction's Rules**
+The Compliance Auditor applies the correct legal disclaimer to every response based on your nationality and location. US citizens see FATCA warnings. EU residents see GDPR notices. UAE residents see Commercial Companies Law notices. You are always informed of your obligations.
+
+**5. Monitors for Money Laundering**
+The Compliance Auditor continuously monitors all transactions for patterns associated with money laundering — multiple transactions just below reporting thresholds, unusual destination accounts, rapid movement of funds. If a suspicious pattern is detected, all accounts are frozen and a Suspicious Activity Report (SAR) is generated automatically.
 
 ---
 
-*This document is the intellectual property of VentureMind / Nomad Flow. It may be shared with investors, advisors, and potential partners under NDA.*
+## Protocol Zero: The System Kill-Switch
+
+If a serious security breach is detected, VentureMind initiates **Protocol Zero** — an immediate system-wide freeze that:
+- Closes all outgoing API connections
+- Locks all user vaults to read-only
+- Triggers human review before any unfreeze
+- Notifies the affected user with clear instructions
+
+No AI, developer, or system process can undo Protocol Zero. Only a human administrator with full audit trail review can restore the system.
+
+---
+
+# 10. How We Validate Everything We Build
+
+## The Testing Framework
+
+Before any new feature, skill, or agent is deployed to handle real founder data, it goes through a rigorous testing process using the **agent-skills-eval** framework:
+
+**Step 1 — Build**: We create a new skill (for example, a tax treaty research skill).
+
+**Step 2 — Test Without**: We run the task with a standard AI that does not have the skill installed. This gives us a baseline performance score.
+
+**Step 3 — Test With**: We run the same task with the skill installed. We compare the results.
+
+**Step 4 — Judge Evaluation**: A separate AI judge evaluates both outputs and scores the improvement. We only accept skills that demonstrably improve output quality.
+
+**Step 5 — Deploy**: The skill is deployed only after empirical evidence proves it works.
+
+This means every skill in VentureMind has been proven to work better than a non-skilled AI — not just assumed to work.
+
+---
+
+# 11. Business Model and Revenue
+
+## Revenue Streams
+
+VentureMind generates revenue through three channels:
+
+### Revenue Stream 1: Subscription Tiers
+Monthly subscription plans based on the founder's needs:
+
+| Tier | Price | What's Included |
+|------|-------|----------------|
+| **Explorer** | $99/month | Basic company formation, one jurisdiction, email support |
+| **Founder** | $299/month | Full formation package, 3 jurisdictions, priority support, basic tax advisory |
+| **Sovereign** | $999/month | Everything + Green Button execution, dedicated human advisors, capital raise support |
+
+### Revenue Stream 2: Transaction Revenue
+A percentage fee on financial transactions executed through the platform:
+- Company formation: 2% of registered agent fee
+- Banking setup: 1% of account opening fee
+- Capital raises: 5% of funds raised (only on successful raise)
+
+### Revenue Stream 3: Affiliate Revenue
+Revenue share from vetted service providers who join the Nomad Flow network:
+- Law firms, accounting firms, banking partners, residency agents
+- Revenue share: 15–30% of first-year revenue from referred clients
+
+---
+
+# 12. Roadmap
+
+## MVP Phases
+
+### Phase 1: Core Brain (Months 1–3)
+- Central Swarm orchestrator
+- Paperclip company package deployed
+- Basic onboarding flow (Intake Interview)
+- Discovery phase: Ideation + Legal Formation pillars
+- gstack Engineering Swarm activated
+
+### Phase 2: Full Platform (Months 4–6)
+- All 10 swarms activated
+- Nomad Navigator + Mobility Swarm live
+- Web3 Swarm: wallet integration
+- Capital Raise Swarm: investor network
+- Feynman research layer integrated
+
+### Phase 3: Execution Layer (Months 7–9)
+- Green Button system activated
+- Human-in-the-loop approval flows
+- Fiat + crypto payment rails
+- Banking partner integrations live
+
+### Phase 4: Scale & Network (Months 10–12)
+- The Guild (human expert network) launched
+- Mobile app (iOS + Android)
+- API for third-party integrations
+- White-label for accelerator partners
+
+---
+
+# 13. Glossary
+
+| Term | Plain-Language Definition |
+|------|--------------------------|
+| **AI Agent** | A software program that can think, decide, and act autonomously — like a virtual employee |
+| **AML** | Anti-Money Laundering — laws that prevent criminals from using financial systems |
+| **Cayman Islands IBC** | International Business Company — a company registered in the Cayman Islands with tax advantages |
+| **CITES** | Capital Gains Tax — tax on profits from selling assets |
+| **Crypto Wallet** | A digital wallet used to store cryptocurrency — like a bank account for digital currency |
+| **DeFi** | Decentralized Finance — financial services built on blockchain technology without traditional banks |
+| **EDD** | Enhanced Due Diligence — extra verification required for high-risk users or transactions |
+| **FATCA** | Foreign Account Tax Compliance Act — US law requiring foreign banks to report US citizen accounts |
+| **FDI** | Foreign Direct Investment — money invested in a country from outside that country |
+| **Feynman** | An AI research agent that conducts deep, multi-source, cited research |
+| **GDPR** | General Data Protection Regulation — EU law protecting personal data privacy |
+| **gstack** | A set of 23 engineering AI tools that allow AI to build software like a full engineering team |
+| **HITL** | Human-in-the-Loop — a checkpoint where a human must approve an AI action before it proceeds |
+| **IBC** | International Business Company — a company structure designed for international business, often with tax benefits |
+| **KYC** | Know Your Customer — the process of verifying a user's identity before providing services |
+| **LLP** | Limited Liability Partnership — a company structure where partners have limited personal liability |
+| **LLC** | Limited Liability Company — a company structure that protects owners' personal assets from business debts |
+| **Multi-Sig Wallet** | A cryptocurrency wallet that requires multiple people to approve a transaction — more secure |
+| **Nomad Flow** | The consumer-facing platform — what founders interact with directly |
+| **PEP** | Politically Exposed Person — someone in a prominent public role, subject to extra compliance checks |
+| **Protocol Zero** | The emergency kill-switch that freezes the entire system if a serious security breach is detected |
+| **QOBDI** | Qualifying Offshore Budget Company — a specific Dubai/RAK International Financial Centre company structure |
+| **ROS** | Register of Shareholders — the official list of who owns shares in a company |
+| **SAR** | Suspicious Activity Report — a report generated when transaction patterns suggest potential money laundering |
+| **SOE** | State-Owned Enterprise — a company owned by a government |
+| **TEE** | Trusted Execution Environment — a physically isolated secure area of a computer processor |
+| **Treaty Network** | A group of countries that have agreed to avoid taxing the same income twice |
+| **UAE Freezone** | A designated economic zone in the UAE (like Dubai Multi Commodities Centre) where foreign ownership is 100% |
+| **VentureMind** | The AI brain — the autonomous multi-agent system that powers the Nomad Flow platform |
+| **W-8BEN-E** | A US tax form used by foreign companies to claim tax treaty benefits |
+| **Zero-Knowledge Architecture** | A security system where encrypted data can be stored and processed without anyone (including the platform) being able to read it |
+
+---
+
+*VentureMind — From Idea to Execution, Anywhere in the World.*
+*Version 2.0 | May 2026 | Confidential*
