@@ -1,0 +1,28 @@
+#!/bin/bash
+# Wrapper for gh CLI — fetches a fresh GitHub token before each invocation.
+# Intended to be called as an alias/function, not as a replacement binary.
+#
+# Authentication: HMAC-SHA256 signature over timestamp + request path.
+# The raw OPTIO_CREDENTIAL_SECRET never crosses the wire.
+
+# Extract path from URL and compute HMAC signature
+_ts=$(date +%s)
+_path=$(echo "${OPTIO_GIT_CREDENTIAL_URL}" | sed 's|^[a-z]*://[^/]*||')
+_sig=$(printf '%s.%s' "$_ts" "$_path" | openssl dgst -sha256 -hmac "${OPTIO_CREDENTIAL_SECRET}" | awk '{print $NF}')
+export GITHUB_TOKEN=$(curl -sf -H "X-Optio-Signature: t=${_ts},sig=${_sig}" "${OPTIO_GIT_CREDENTIAL_URL}" | jq -r '.token')
+unset _ts _path _sig
+
+# Resolve a path to its real target, with fallback if realpath is unavailable
+resolve_path() {
+  realpath "$1" 2>/dev/null || readlink -f "$1" 2>/dev/null || echo "$1"
+}
+
+# Find the real gh binary, skipping this wrapper
+SELF="$(resolve_path "$0")"
+for candidate in /usr/bin/gh /usr/local/bin/gh; do
+  if [ -x "$candidate" ] && [ "$(resolve_path "$candidate")" != "$SELF" ]; then
+    exec "$candidate" "$@"
+  fi
+done
+echo "Error: gh CLI not found" >&2
+exit 1

@@ -1,0 +1,26 @@
+{
+  "name": "@optio/ticket-providers",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@linear/sdk": "^37.0.0",
+    "@notionhq/client": "^2.3.0",
+    "@octokit/rest": "^21.1.1",
+    "@optio/shared": "workspace:*",
+    "jira.js": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.2.1"
+  }
+}

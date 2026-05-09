@@ -1,0 +1,552 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1773954355704,
+      "tag": "0000_bent_spencer_smythe",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1773957836412,
+      "tag": "0001_mature_elektra",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1773958428019,
+      "tag": "0002_great_the_liberteens",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1773959112395,
+      "tag": "0003_giant_agent_brand",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1773969105924,
+      "tag": "0004_free_whiplash",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1773975560421,
+      "tag": "0005_sad_guardian",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1773978384505,
+      "tag": "0006_careful_polaris",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1773980347972,
+      "tag": "0007_hesitant_lilith",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1774015768205,
+      "tag": "0008_mighty_zarda",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1774016156301,
+      "tag": "0009_burly_moon_knight",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1774019245579,
+      "tag": "0010_organic_ender_wiggin",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1774026567216,
+      "tag": "0011_silent_nemesis",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1774032949268,
+      "tag": "0012_brown_caretaker",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1774108800000,
+      "tag": "0013_rename_auto_resume",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1774195200000,
+      "tag": "0014_pod_scaling_worktree_lifecycle",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1774281600000,
+      "tag": "0015_auth_users_sessions",
+      "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1774368000000,
+      "tag": "0016_add_query_indexes",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1774454400000,
+      "tag": "0017_cost_optimization_tokens",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1774540800000,
+      "tag": "0018_scheduled_tasks",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1774627200000,
+      "tag": "0019_slack_integration",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1774713600000,
+      "tag": "0020_max_auto_resumes",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1774800000000,
+      "tag": "0021_task_templates",
+      "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1774886400000,
+      "tag": "0022_workspaces",
+      "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1774972800000,
+      "tag": "0023_task_dependencies_workflows",
+      "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1775059200000,
+      "tag": "0024_mcp_servers_custom_skills",
+      "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1775145600000,
+      "tag": "0025_network_policy",
+      "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1775232000000,
+      "tag": "0026_repos_null_workspace_unique",
+      "breakpoints": true
+    },
+    {
+      "idx": 27,
+      "version": "7",
+      "when": 1775318400000,
+      "tag": "0027_off_peak_mode",
+      "breakpoints": true
+    },
+    {
+      "idx": 28,
+      "version": "7",
+      "when": 1775404800000,
+      "tag": "0028_pod_resource_requests",
+      "breakpoints": true
+    },
+    {
+      "idx": 29,
+      "version": "7",
+      "when": 1775491200000,
+      "tag": "0029_docker_in_docker",
+      "breakpoints": true
+    },
+    {
+      "idx": 30,
+      "version": "7",
+      "when": 1775577600000,
+      "tag": "0030_secret_proxy",
+      "breakpoints": true
+    },
+    {
+      "idx": 31,
+      "version": "7",
+      "when": 1775664000000,
+      "tag": "0031_workspace_scoped_indexes",
+      "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "7",
+      "when": 1775750400000,
+      "tag": "0032_optio_settings",
+      "breakpoints": true
+    },
+    {
+      "idx": 33,
+      "version": "7",
+      "when": 1775836800000,
+      "tag": "0033_optio_actions",
+      "breakpoints": true
+    },
+    {
+      "idx": 34,
+      "version": "7",
+      "when": 1775923200000,
+      "tag": "0034_copilot_agent_settings",
+      "breakpoints": true
+    },
+    {
+      "idx": 35,
+      "version": "7",
+      "when": 1776009600000,
+      "tag": "0035_repo_default_agent_type",
+      "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "7",
+      "when": 1776096000000,
+      "tag": "0036_review_drafts",
+      "breakpoints": true
+    },
+    {
+      "idx": 37,
+      "version": "7",
+      "when": 1776182400000,
+      "tag": "0037_encrypt_webhook_slack_secrets",
+      "breakpoints": true
+    },
+    {
+      "idx": 38,
+      "version": "7",
+      "when": 1776268800000,
+      "tag": "0038_workspace_scoping_idor",
+      "breakpoints": true
+    },
+    {
+      "idx": 39,
+      "version": "7",
+      "when": 1776355200000,
+      "tag": "0039_add_git_platform",
+      "breakpoints": true
+    },
+    {
+      "idx": 40,
+      "version": "7",
+      "when": 1776441600000,
+      "tag": "0039_cautious_mode",
+      "breakpoints": true
+    },
+    {
+      "idx": 41,
+      "version": "7",
+      "when": 1776528000000,
+      "tag": "0040_workspace_allow_dind",
+      "breakpoints": true
+    },
+    {
+      "idx": 42,
+      "version": "7",
+      "when": 1776614400000,
+      "tag": "0041_encryption_alg_version",
+      "breakpoints": true
+    },
+    {
+      "idx": 43,
+      "version": "7",
+      "when": 1776700800000,
+      "tag": "0042_opencode_repo_columns",
+      "breakpoints": true
+    },
+    {
+      "idx": 44,
+      "version": "7",
+      "when": 1776787200000,
+      "tag": "0042_task_messages",
+      "breakpoints": true
+    },
+    {
+      "idx": 45,
+      "version": "7",
+      "when": 1776873600000,
+      "tag": "0044_push_notifications",
+      "breakpoints": true
+    },
+    {
+      "idx": 46,
+      "version": "7",
+      "when": 1776873600000,
+      "tag": "0043_gemini_columns",
+      "breakpoints": true
+    },
+    {
+      "idx": 47,
+      "version": "7",
+      "when": 1776960000000,
+      "tag": "0045_stall_detection",
+      "breakpoints": true
+    },
+    {
+      "idx": 48,
+      "version": "7",
+      "when": 1777046400000,
+      "tag": "0046_repo_shared_directories",
+      "breakpoints": true
+    },
+    {
+      "idx": 49,
+      "version": "7",
+      "when": 1775613995000,
+      "tag": "1775613995_repair_duplicate_migrations",
+      "breakpoints": true
+    },
+    {
+      "idx": 50,
+      "version": "7",
+      "when": 1775627754000,
+      "tag": "1775627754_api_keys",
+      "breakpoints": true
+    },
+    {
+      "idx": 51,
+      "version": "7",
+      "when": 1775791846000,
+      "tag": "1775791846_replace_workflow_tables",
+      "breakpoints": true
+    },
+    {
+      "idx": 52,
+      "version": "7",
+      "when": 1775792368000,
+      "tag": "1775792368_workflow_pods",
+      "breakpoints": true
+    },
+    {
+      "idx": 53,
+      "version": "7",
+      "when": 1775792464000,
+      "tag": "1775792464_workflow_run_logs",
+      "breakpoints": true
+    },
+    {
+      "idx": 54,
+      "version": "7",
+      "when": 1775794444000,
+      "tag": "1775794444_workflow_trigger_schedule",
+      "breakpoints": true
+    },
+    {
+      "idx": 55,
+      "version": "7",
+      "when": 1775793000000,
+      "tag": "1775793000_workflow_run_logs",
+      "breakpoints": true
+    },
+    {
+      "idx": 56,
+      "version": "7",
+      "when": 1775795000000,
+      "tag": "1775795000_auth_events",
+      "breakpoints": true
+    },
+    {
+      "idx": 57,
+      "version": "7",
+      "when": 1775809203000,
+      "tag": "1775809203_planning_mode_enabled",
+      "breakpoints": true
+    },
+    {
+      "idx": 58,
+      "version": "7",
+      "when": 1775855324000,
+      "tag": "1775855324_openclaw_repo_columns",
+      "breakpoints": true
+    },
+    {
+      "idx": 59,
+      "version": "7",
+      "when": 1775971783000,
+      "tag": "1775971783_connections",
+      "breakpoints": true
+    },
+    {
+      "idx": 60,
+      "version": "7",
+      "when": 1776045285000,
+      "tag": "1776045285_statefulset_job_support",
+      "breakpoints": true
+    },
+    {
+      "idx": 61,
+      "version": "7",
+      "when": 1776050234000,
+      "tag": "1776050234_auth_events_source",
+      "breakpoints": true
+    },
+    {
+      "idx": 62,
+      "version": "7",
+      "when": 1776281186000,
+      "tag": "1776281186_opencode_base_url",
+      "breakpoints": true
+    },
+    {
+      "idx": 63,
+      "version": "7",
+      "when": 1776396730000,
+      "tag": "1776396730_generic_trigger_target",
+      "breakpoints": true
+    },
+    {
+      "idx": 64,
+      "version": "7",
+      "when": 1776397040000,
+      "tag": "1776397040_task_configs",
+      "breakpoints": true
+    },
+    {
+      "idx": 65,
+      "version": "7",
+      "when": 1776398039000,
+      "tag": "1776398039_template_kind",
+      "breakpoints": true
+    },
+    {
+      "idx": 66,
+      "version": "7",
+      "when": 1776410298000,
+      "tag": "1776410298_ticket_provider_error_tracking",
+      "breakpoints": true
+    },
+    {
+      "idx": 67,
+      "version": "7",
+      "when": 1776686400000,
+      "tag": "1776686400_reconcile_columns",
+      "breakpoints": true
+    },
+    {
+      "idx": 68,
+      "version": "7",
+      "when": 1776686500000,
+      "tag": "1776686500_workflow_pod_pooling",
+      "breakpoints": true
+    },
+    {
+      "idx": 69,
+      "version": "7",
+      "when": 1776825057000,
+      "tag": "1776825057_external_pr_auto_review",
+      "breakpoints": true
+    },
+    {
+      "idx": 70,
+      "version": "7",
+      "when": 1777012800000,
+      "tag": "1777012800_user_scoped_secrets",
+      "breakpoints": true
+    },
+    {
+      "idx": 71,
+      "version": "7",
+      "when": 1777094400000,
+      "tag": "1777094400_pr_review_primitive",
+      "breakpoints": true
+    },
+    {
+      "idx": 72,
+      "version": "7",
+      "when": 1777100000000,
+      "tag": "1777100000_backfill_pr_review_pr_url",
+      "breakpoints": true
+    },
+    {
+      "idx": 73,
+      "version": "7",
+      "when": 1777186008000,
+      "tag": "1777186008_review_agent_type",
+      "breakpoints": true
+    },
+    {
+      "idx": 74,
+      "version": "7",
+      "when": 1777200000000,
+      "tag": "1777200000_custom_skills_agent_types_files",
+      "breakpoints": true
+    },
+    {
+      "idx": 75,
+      "version": "7",
+      "when": 1777200001000,
+      "tag": "1777200001_persistent_agents",
+      "breakpoints": true
+    },
+    {
+      "idx": 76,
+      "version": "7",
+      "when": 1777300000000,
+      "tag": "1777300000_installed_skills",
+      "breakpoints": true
+    },
+    {
+      "idx": 77,
+      "version": "7",
+      "when": 1777400000000,
+      "tag": "1777400000_session_chat_events",
+      "breakpoints": true
+    }
+  ]
+}

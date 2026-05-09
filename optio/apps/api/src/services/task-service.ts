@@ -1,0 +1,798 @@
+import { eq, desc, and, or, ilike, gte, lte, sql } from "drizzle-orm";
+import { db } from "../db/client.js";
+import { tasks, taskEvents, taskLogs, users, repos } from "../db/schema.js";
+import {
+  TaskState,
+  transition,
+  InvalidTransitionError,
+  normalizeRepoUrl,
+  DEFAULT_STALL_THRESHOLD_MS,
+  parseIntEnv,
+  type CreateTaskInput,
+} from "@optio/shared";
+import { publishEvent } from "./event-bus.js";
+import { logger } from "../logger.js";
+import { enqueueWebhookEvent } from "../workers/webhook-worker.js";
+import type { WebhookEvent } from "./webhook-service.js";
+import { recordStateTransition } from "../telemetry/metrics.js";
+import { emitStateTransitionLog } from "../telemetry/logs.js";
+
+/**
+ * Thrown when a state transition fails because another worker changed the
+ * state between our read and write (atomic conditional update returned 0 rows).
+ */
+export class StateRaceError extends Error {
+  constructor(
+    public readonly attemptedFrom: TaskState,
+    public readonly attemptedTo: TaskState,
+    public readonly actualState: TaskState | undefined,
+  ) {
+    super(
+      `State race: expected ${attemptedFrom} → ${attemptedTo}, but state is now ${actualState ?? "unknown"}`,
+    );
+    this.name = "StateRaceError";
+  }
+}
+
+export async function createTask(input: CreateTaskInput & { workspaceId?: string | null }) {
+  const [task] = await db
+    .insert(tasks)
+    .values({
+      title: input.title,
+      prompt: input.prompt,
+      repoUrl: normalizeRepoUrl(input.repoUrl),
+      repoBranch: input.repoBranch ?? "main",
+      agentType: input.agentType,
+      ticketSource: input.ticketSource,
+      ticketExternalId: input.ticketExternalId,
+      metadata: input.metadata,
+      maxRetries: input.maxRetries ?? 3,
+      priority: input.priority ?? 100,
+      createdBy: input.createdBy ?? undefined,
+      workspaceId: input.workspaceId ?? undefined,
+    })
+    .returning();
+
+  await publishEvent({
+    type: "task:created",
+    taskId: task.id,
+    title: task.title,
+    timestamp: new Date().toISOString(),
+  });
+
+  return task;
+}
+
+export async function getTask(id: string) {
+  const [task] = await db.select().from(tasks).where(eq(tasks.id, id));
+  return task ?? null;
+}
+
+/**
+ * No-op shim kept for call-site back-compat. External PR reviews moved off
+ * the `tasks` table into the `pr_reviews` primitive, so there are no
+ * pr_review tasks rows to hydrate anymore. The function returns rows
+ * unchanged and exists only so routes that still call it keep typechecking.
+ * Safe to delete in a follow-up once callers are migrated.
+ */
+export async function hydratePrReviewPrUrls<T extends typeof tasks.$inferSelect>(
+  rows: T[],
+): Promise<T[]> {
+  return rows;
+}
+
+export async function listTasks(opts?: {
+  state?: string;
+  limit?: number;
+  offset?: number;
+  workspaceId?: string | null;
+}) {
+  const conditions = [];
+  if (opts?.state) {
+    conditions.push(eq(tasks.state, opts.state as any));
+  }
+  if (opts?.workspaceId) {
+    conditions.push(eq(tasks.workspaceId, opts.workspaceId));
+  }
+
+  let query = db.select().from(tasks).orderBy(desc(tasks.createdAt));
+  if (conditions.length > 0) {
+    query = query.where(and(...conditions)) as typeof query;
+  }
+  if (opts?.limit) {
+    query = query.limit(opts.limit) as typeof query;
+  }
+  if (opts?.offset) {
+    query = query.offset(opts.offset) as typeof query;
+  }
+  return query;
+}
+
+export interface SearchTasksOpts {
+  q?: string;
+  state?: string;
+  repoUrl?: string;
+  agentType?: string;
+  taskType?: string;
+  costMin?: string;
+  costMax?: string;
+  createdAfter?: string;
+  createdBefore?: string;
+  author?: string;
+  cursor?: string;
+  limit?: number;
+  workspaceId?: string | null;
+}
+
+export async function searchTasks(opts: SearchTasksOpts) {
+  const limit = opts.limit ?? 50;
+  const conditions = [];
+
+  // Workspace filter
+  if (opts.workspaceId) {
+    conditions.push(eq(tasks.workspaceId, opts.workspaceId));
+  }
+
+  // Full-text search on title and prompt
+  if (opts.q) {
+    const pattern = `%${opts.q}%`;
+    conditions.push(or(ilike(tasks.title, pattern), ilike(tasks.prompt, pattern))!);
+  }
+
+  // Exact field filters
+  if (opts.state) {
+    conditions.push(eq(tasks.state, opts.state as any));
+  }
+  if (opts.repoUrl) {
+    conditions.push(eq(tasks.repoUrl, normalizeRepoUrl(opts.repoUrl)));
+  }
+  if (opts.agentType) {
+    conditions.push(eq(tasks.agentType, opts.agentType));
+  }
+  if (opts.taskType) {
+    conditions.push(eq(tasks.taskType, opts.taskType));
+  }
+  if (opts.author) {
+    conditions.push(eq(tasks.createdBy, opts.author));
+  }
+
+  // Cost range (costUsd is stored as text, cast to numeric for comparison)
+  if (opts.costMin) {
+    conditions.push(sql`CAST(${tasks.costUsd} AS numeric) >= ${Number(opts.costMin)}`);
+  }
+  if (opts.costMax) {
+    conditions.push(sql`CAST(${tasks.costUsd} AS numeric) <= ${Number(opts.costMax)}`);
+  }
+
+  // Date range — filter on updatedAt so actively running tasks (which may have
+  // been created days ago) still appear in time-filtered views
+  if (opts.createdAfter) {
+    conditions.push(gte(tasks.updatedAt, new Date(opts.createdAfter)));
+  }
+  if (opts.createdBefore) {
+    conditions.push(lte(tasks.updatedAt, new Date(opts.createdBefore)));
+  }
+
+  // Cursor-based pagination: cursor is base64 of "createdAt|id"
+  if (opts.cursor) {
+    const decoded = Buffer.from(opts.cursor, "base64").toString();
+    const sepIdx = decoded.indexOf("|");
+    if (sepIdx !== -1) {
+      const cursorDate = decoded.slice(0, sepIdx);
+      const cursorId = decoded.slice(sepIdx + 1);
+      conditions.push(
+        or(
+          sql`${tasks.createdAt} < ${new Date(cursorDate)}`,
+          and(eq(tasks.createdAt, new Date(cursorDate) as any), sql`${tasks.id} < ${cursorId}`),
+        )!,
+      );
+    }
+  }
+
+  let query = db
+    .select()
+    .from(tasks)
+    .orderBy(desc(tasks.createdAt), desc(tasks.id))
+    .limit(limit + 1);
+
+  if (conditions.length > 0) {
+    query = query.where(and(...conditions)) as typeof query;
+  }
+
+  const results = await query;
+  const hasMore = results.length > limit;
+  const items = hasMore ? results.slice(0, limit) : results;
+
+  let nextCursor: string | null = null;
+  if (hasMore && items.length > 0) {
+    const last = items[items.length - 1];
+    nextCursor = Buffer.from(`${last.createdAt.toISOString()}|${last.id}`).toString("base64");
+  }
+
+  const hydrated = await hydratePrReviewPrUrls(items);
+  return { tasks: hydrated, nextCursor, hasMore };
+}
+
+export async function transitionTask(
+  id: string,
+  toState: TaskState,
+  trigger: string,
+  message?: string,
+  userId?: string,
+) {
+  const task = await getTask(id);
+  if (!task) throw new Error(`Task not found: ${id}`);
+
+  const currentState = task.state as TaskState;
+  transition(currentState, toState); // throws if invalid
+
+  const updateFields: Record<string, unknown> = {
+    state: toState,
+    updatedAt: new Date(),
+  };
+
+  if (toState === TaskState.RUNNING && !task.startedAt) {
+    updateFields.startedAt = new Date();
+  }
+  // Stall detection: set lastActivityAt when entering running, reset substate when leaving
+  if (toState === TaskState.RUNNING) {
+    updateFields.lastActivityAt = new Date();
+    updateFields.activitySubstate = "active";
+  }
+  if (currentState === TaskState.RUNNING && toState !== TaskState.RUNNING) {
+    updateFields.activitySubstate = "active";
+  }
+  if (
+    toState === TaskState.COMPLETED ||
+    toState === TaskState.FAILED ||
+    toState === TaskState.CANCELLED
+  ) {
+    updateFields.completedAt = new Date();
+  }
+  // Clear error fields on successful completion (PR merged after prior errors)
+  if (toState === TaskState.COMPLETED) {
+    updateFields.errorMessage = null;
+    updateFields.resultSummary = null;
+  }
+  // Store the reason when a task needs attention so the UI can display it
+  if (toState === TaskState.NEEDS_ATTENTION) {
+    updateFields.errorMessage = message || trigger;
+  }
+  // Reset fields when retrying/re-queuing
+  if (toState === TaskState.QUEUED) {
+    updateFields.errorMessage = null;
+    updateFields.resultSummary = null;
+    updateFields.completedAt = null;
+    updateFields.startedAt = null;
+    updateFields.containerId = null;
+  }
+
+  // Atomic conditional update — only succeeds if state hasn't changed since we read it
+  const updated = await db
+    .update(tasks)
+    .set(updateFields)
+    .where(and(eq(tasks.id, id), eq(tasks.state, currentState as any)))
+    .returning();
+
+  if (updated.length === 0) {
+    // Another worker changed the state between our read and write
+    const fresh = await getTask(id);
+    throw new StateRaceError(currentState, toState, fresh?.state as TaskState);
+  }
+
+  await db.insert(taskEvents).values({
+    taskId: id,
+    fromState: currentState,
+    toState,
+    trigger,
+    message,
+    userId,
+  });
+
+  const updatedTask = updated[0];
+
+  // Emit OTel state transition metric and log
+  recordStateTransition(currentState, toState, trigger);
+  emitStateTransitionLog(id, currentState, toState, trigger);
+
+  await publishEvent({
+    type: "task:state_changed",
+    taskId: id,
+    fromState: currentState,
+    toState,
+    timestamp: new Date().toISOString(),
+    // Include task data so the frontend can update without refetching
+    costUsd: updatedTask.costUsd ?? undefined,
+    inputTokens: updatedTask.inputTokens ?? undefined,
+    outputTokens: updatedTask.outputTokens ?? undefined,
+    modelUsed: updatedTask.modelUsed ?? undefined,
+    errorMessage: updatedTask.errorMessage ?? undefined,
+  });
+
+  // Close linked issue when task completes (GitHub or GitLab)
+  if (
+    toState === TaskState.COMPLETED &&
+    (task.ticketSource === "github" || task.ticketSource === "gitlab") &&
+    task.ticketExternalId
+  ) {
+    closeIssue(task.repoUrl, task.ticketExternalId, task.prUrl).catch((err) =>
+      logger.warn({ err, taskId: id }, "Failed to close linked issue"),
+    );
+  }
+
+  // Dispatch webhook notifications for relevant state changes
+  const webhookEventMap: Partial<Record<TaskState, WebhookEvent>> = {
+    [TaskState.COMPLETED]: task.taskType === "review" ? "review.completed" : "task.completed",
+    [TaskState.FAILED]: "task.failed",
+    [TaskState.NEEDS_ATTENTION]: "task.needs_attention",
+    [TaskState.PR_OPENED]: "task.pr_opened",
+  };
+  const webhookEvent = webhookEventMap[toState];
+  if (webhookEvent) {
+    enqueueWebhookEvent(webhookEvent, {
+      taskId: id,
+      taskTitle: task.title,
+      repoUrl: task.repoUrl,
+      repoBranch: task.repoBranch,
+      fromState: currentState,
+      toState,
+      prUrl: updated[0].prUrl ?? undefined,
+      errorMessage: updated[0].errorMessage ?? undefined,
+      taskType: task.taskType,
+    }).catch((err) => logger.warn({ err, taskId: id }, "Failed to enqueue webhook event"));
+  }
+
+  // Send Slack notification (fire-and-forget)
+  sendSlackNotificationForTask(updated[0], toState).catch((err) =>
+    logger.warn({ err, taskId: id }, "Failed to send Slack notification"),
+  );
+
+  // Send push notification (fire-and-forget)
+  import("./notification-service.js")
+    .then(({ sendPushNotificationForTransition }) =>
+      sendPushNotificationForTransition(updated[0], toState),
+    )
+    .catch((err) => logger.warn({ err, taskId: id }, "Failed to send push notification"));
+
+  // Handle task dependency graph: unblock dependents on completion, cascade on failure
+  if (toState === TaskState.COMPLETED) {
+    import("./dependency-service.js")
+      .then(({ onDependencyComplete }) => onDependencyComplete(id))
+      .catch((err) => logger.warn({ err, taskId: id }, "Failed to unblock dependent tasks"));
+  }
+  if (toState === TaskState.FAILED) {
+    import("./dependency-service.js")
+      .then(({ cascadeFailure }) => cascadeFailure(id))
+      .catch((err) => logger.warn({ err, taskId: id }, "Failed to cascade failure to dependents"));
+  }
+
+  // Wake the reconciler. Every state change is a signal it may want to act
+  // (capacity opened up, PR-related state changed, dependency cascade, etc).
+  import("./reconcile-queue.js")
+    .then(({ enqueueReconcile }) =>
+      enqueueReconcile({ kind: "repo", id }, { reason: `transition:${currentState}->${toState}` }),
+    )
+    .catch((err) => logger.warn({ err, taskId: id }, "Failed to enqueue reconcile"));
+
+  return updated[0];
+}
+
+async function closeIssue(repoUrl: string, issueNumber: string, prUrl?: string | null) {
+  const { getGitPlatformForRepo } = await import("./git-token-service.js");
+  const { platform, ri } = await getGitPlatformForRepo(repoUrl, { server: true });
+
+  // Post completion comment
+  const comment = prUrl
+    ? `✅ **Optio** completed this issue. Changes merged in ${prUrl}.`
+    : `✅ **Optio** completed this issue.`;
+
+  await platform.createIssueComment(ri, parseInt(issueNumber, 10), comment);
+  await platform.closeIssue(ri, parseInt(issueNumber, 10));
+
+  logger.info({ repoUrl, issueNumber }, "Closed linked issue");
+}
+
+/**
+ * Like transitionTask, but returns null instead of throwing when another
+ * worker wins the race. Used by the task worker at the critical
+ * queued → provisioning claim point.
+ *
+ * Two race shapes are both treated as "lost the race, exit cleanly":
+ *   - StateRaceError: the CAS update returned 0 rows (state changed between
+ *     our read and write of the *same* transition).
+ *   - InvalidTransitionError: another worker advanced the state to the same
+ *     target ahead of us, so the validator throws (e.g. provisioning →
+ *     provisioning when the winner already moved us into provisioning).
+ */
+export async function tryTransitionTask(
+  id: string,
+  toState: TaskState,
+  trigger: string,
+  message?: string,
+  userId?: string,
+) {
+  try {
+    return await transitionTask(id, toState, trigger, message, userId);
+  } catch (err) {
+    if (err instanceof StateRaceError || err instanceof InvalidTransitionError) {
+      return null;
+    }
+    throw err;
+  }
+}
+
+/**
+ * Bump tasks.updatedAt without a state transition or event.
+ * Called periodically during log streaming so the stale detector
+ * knows the task is still active.
+ */
+export async function touchTaskHeartbeat(id: string) {
+  await db.update(tasks).set({ updatedAt: new Date() }).where(eq(tasks.id, id));
+}
+
+export async function updateTaskContainer(id: string, containerId: string) {
+  await db.update(tasks).set({ containerId, updatedAt: new Date() }).where(eq(tasks.id, id));
+}
+
+export async function updateTaskPr(id: string, prUrl: string) {
+  const prNumberMatch = prUrl.match(/\/pull\/(\d+)/);
+  const prNumber = prNumberMatch ? parseInt(prNumberMatch[1], 10) : undefined;
+  await db
+    .update(tasks)
+    .set({ prUrl, ...(prNumber != null && { prNumber }), updatedAt: new Date() })
+    .where(eq(tasks.id, id));
+}
+
+export async function updateTaskSession(id: string, sessionId: string) {
+  await db.update(tasks).set({ sessionId, updatedAt: new Date() }).where(eq(tasks.id, id));
+}
+
+export async function updateTaskResult(id: string, resultSummary?: string, errorMessage?: string) {
+  await db
+    .update(tasks)
+    .set({ resultSummary, errorMessage, updatedAt: new Date() })
+    .where(eq(tasks.id, id));
+}
+
+export async function appendTaskLog(
+  taskId: string,
+  content: string,
+  stream = "stdout",
+  logType?: string,
+  metadata?: Record<string, unknown>,
+) {
+  await db.insert(taskLogs).values({ taskId, content, stream, logType, metadata });
+
+  await publishEvent({
+    type: "task:log",
+    taskId,
+    stream: stream as "stdout" | "stderr",
+    content,
+    timestamp: new Date().toISOString(),
+  });
+}
+
+export async function getTaskLogs(
+  taskId: string,
+  opts?: { limit?: number; offset?: number; search?: string; logType?: string },
+) {
+  const conditions = [eq(taskLogs.taskId, taskId)];
+  if (opts?.logType) {
+    conditions.push(eq(taskLogs.logType, opts.logType));
+  }
+  if (opts?.search) {
+    conditions.push(ilike(taskLogs.content, `%${opts.search}%`));
+  }
+  let query = db
+    .select()
+    .from(taskLogs)
+    .where(and(...conditions))
+    .orderBy(taskLogs.timestamp);
+  if (opts?.limit) query = query.limit(opts.limit) as typeof query;
+  if (opts?.offset) query = query.offset(opts.offset) as typeof query;
+  return query;
+}
+
+export async function getAllTaskLogs(taskId: string, opts?: { search?: string; logType?: string }) {
+  const conditions = [eq(taskLogs.taskId, taskId)];
+  if (opts?.logType) {
+    conditions.push(eq(taskLogs.logType, opts.logType));
+  }
+  if (opts?.search) {
+    conditions.push(ilike(taskLogs.content, `%${opts.search}%`));
+  }
+  return db
+    .select()
+    .from(taskLogs)
+    .where(and(...conditions))
+    .orderBy(taskLogs.timestamp);
+}
+
+export async function forceRedoTask(id: string) {
+  const task = await getTask(id);
+  if (!task) throw new Error(`Task not found: ${id}`);
+
+  // Clear all execution data and reset to queued
+  await db
+    .update(tasks)
+    .set({
+      state: TaskState.QUEUED,
+      sessionId: null,
+      containerId: null,
+      prUrl: null,
+      prNumber: null,
+      prState: null,
+      prChecksStatus: null,
+      prReviewStatus: null,
+      prReviewComments: null,
+      resultSummary: null,
+      costUsd: null,
+      errorMessage: null,
+      startedAt: null,
+      completedAt: null,
+      updatedAt: new Date(),
+    })
+    .where(eq(tasks.id, id));
+
+  // Delete all logs
+  await db.delete(taskLogs).where(eq(taskLogs.taskId, id));
+
+  // Record the force-redo event (keep event history for audit)
+  const fromState = task.state as TaskState;
+  await db.insert(taskEvents).values({
+    taskId: id,
+    fromState,
+    toState: TaskState.QUEUED,
+    trigger: "force_redo",
+    message: `Force redo from ${fromState}`,
+  });
+
+  await publishEvent({
+    type: "task:state_changed",
+    taskId: id,
+    fromState,
+    toState: TaskState.QUEUED,
+    timestamp: new Date().toISOString(),
+  });
+
+  return await getTask(id);
+}
+
+/**
+ * Record a task event without a state transition (e.g. user_message, user_interrupt).
+ * Uses the task's current state as both fromState and toState.
+ */
+export async function recordTaskEvent(
+  taskId: string,
+  currentState: string,
+  trigger: string,
+  message?: string,
+  userId?: string,
+) {
+  await db.insert(taskEvents).values({
+    taskId,
+    fromState: currentState as any,
+    toState: currentState as any,
+    trigger,
+    message,
+    userId,
+  });
+}
+
+export async function getTaskEvents(taskId: string) {
+  const rows = await db
+    .select({
+      id: taskEvents.id,
+      taskId: taskEvents.taskId,
+      fromState: taskEvents.fromState,
+      toState: taskEvents.toState,
+      trigger: taskEvents.trigger,
+      message: taskEvents.message,
+      userId: taskEvents.userId,
+      createdAt: taskEvents.createdAt,
+      userName: users.displayName,
+      userAvatar: users.avatarUrl,
+    })
+    .from(taskEvents)
+    .leftJoin(users, eq(taskEvents.userId, users.id))
+    .where(eq(taskEvents.taskId, taskId))
+    .orderBy(taskEvents.createdAt);
+
+  return rows.map((row) => ({
+    id: row.id,
+    taskId: row.taskId,
+    fromState: row.fromState,
+    toState: row.toState,
+    trigger: row.trigger,
+    message: row.message,
+    userId: row.userId,
+    createdAt: row.createdAt,
+    user: row.userId
+      ? { id: row.userId, displayName: row.userName!, avatarUrl: row.userAvatar }
+      : undefined,
+  }));
+}
+
+/**
+ * Resolve repo config and send a Slack notification for a task state change.
+ */
+async function sendSlackNotificationForTask(
+  task: {
+    id: string;
+    title: string;
+    repoUrl: string;
+    state: string;
+    prUrl?: string | null;
+    costUsd?: string | null;
+    errorMessage?: string | null;
+  },
+  toState: TaskState,
+): Promise<void> {
+  const { notifySlackOnTransition } = await import("./slack-service.js");
+  const { getRepoByUrl } = await import("./repo-service.js");
+  const repoConfig = await getRepoByUrl(task.repoUrl);
+  await notifySlackOnTransition({ ...task, state: toState }, toState, repoConfig);
+}
+
+/**
+ * Update the task's lastActivityAt timestamp and handle stall recovery.
+ * Called from the task-worker with debounced writes.
+ */
+export async function updateTaskActivity(taskId: string, at: Date) {
+  // Use a conditional update: if the task was stalled, flip to recovered
+  const updated = await db
+    .update(tasks)
+    .set({
+      lastActivityAt: at,
+      activitySubstate: sql`CASE WHEN ${tasks.activitySubstate} = 'stalled' THEN 'recovered' ELSE ${tasks.activitySubstate} END`,
+    })
+    .where(eq(tasks.id, taskId))
+    .returning({ activitySubstate: tasks.activitySubstate, lastActivityAt: tasks.lastActivityAt });
+
+  // If we just recovered from stalled, publish the event
+  if (updated.length > 0 && updated[0].activitySubstate === "recovered") {
+    const task = await getTask(taskId);
+    if (task) {
+      const silentWasMs = task.lastActivityAt
+        ? at.getTime() - new Date(task.lastActivityAt).getTime()
+        : 0;
+      await publishEvent({
+        type: "task:recovered",
+        taskId,
+        silentWasMs: Math.max(0, silentWasMs),
+        timestamp: new Date().toISOString(),
+      });
+    }
+  }
+}
+
+/**
+ * Get the effective stall threshold for a repo.
+ * Priority: per-repo override → env var → hardcoded default.
+ */
+export function getStallThresholdForRepo(
+  repoConfig: {
+    stallThresholdMs?: number | null;
+  } | null,
+): number {
+  if (repoConfig?.stallThresholdMs != null) {
+    return repoConfig.stallThresholdMs;
+  }
+  return parseIntEnv("OPTIO_STALL_THRESHOLD_MS", DEFAULT_STALL_THRESHOLD_MS);
+}
+
+/**
+ * Get the last meaningful log entry summary for a stalled task.
+ * Returns a short string like "Bash $ npm test" or "Read file.ts".
+ */
+export async function getLastLogSummary(taskId: string): Promise<string | undefined> {
+  const [log] = await db
+    .select({ content: taskLogs.content, logType: taskLogs.logType })
+    .from(taskLogs)
+    .where(
+      and(
+        eq(taskLogs.taskId, taskId),
+        sql`${taskLogs.logType} IN ('tool_use', 'text', 'tool_result')`,
+      ),
+    )
+    .orderBy(desc(taskLogs.timestamp))
+    .limit(1);
+
+  if (!log) return undefined;
+  // Truncate to a reasonable summary length
+  const summary = log.content.trim().slice(0, 120);
+  return summary || undefined;
+}
+
+/**
+ * Get repo config for a given repo URL. Used by stall detector.
+ */
+export async function getRepoConfig(repoUrl: string) {
+  const [repo] = await db.select().from(repos).where(eq(repos.repoUrl, repoUrl));
+  return repo ?? null;
+}
+
+/**
+ * Compute aggregated pipeline stats server-side via a single grouped COUNT query.
+ * Returns the same shape as the frontend TaskStats interface so the dashboard
+ * can consume it directly.
+ */
+export async function getTaskStats(workspaceId?: string | null) {
+  const conditions = [];
+  if (workspaceId) {
+    conditions.push(eq(tasks.workspaceId, workspaceId));
+  }
+
+  const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
+
+  // Single query: count tasks grouped by state, and for pr_opened tasks
+  // also count CI vs review sub-buckets
+  const rows = await db
+    .select({
+      state: tasks.state,
+      prChecksStatus: tasks.prChecksStatus,
+      prReviewStatus: tasks.prReviewStatus,
+      count: sql<number>`count(*)::int`,
+    })
+    .from(tasks)
+    .where(whereClause)
+    .groupBy(tasks.state, tasks.prChecksStatus, tasks.prReviewStatus);
+
+  let total = 0;
+  let queued = 0;
+  let running = 0;
+  let ci = 0;
+  let review = 0;
+  let needsAttention = 0;
+  let failed = 0;
+  let completed = 0;
+
+  for (const row of rows) {
+    const count = row.count;
+    total += count;
+
+    switch (row.state) {
+      case "pending":
+      case "queued":
+      case "provisioning":
+        queued += count;
+        break;
+      case "running":
+        running += count;
+        break;
+      case "needs_attention":
+        needsAttention += count;
+        break;
+      case "failed":
+        failed += count;
+        break;
+      case "completed":
+        completed += count;
+        break;
+      case "pr_opened": {
+        // Mirror the client-side logic: if review status is meaningful
+        // (not "none"/"pending"), it's a review; otherwise CI.
+        const reviewStatus = row.prReviewStatus;
+        const isReview = reviewStatus != null && !["none", "pending"].includes(reviewStatus);
+        if (isReview) {
+          review += count;
+        } else {
+          ci += count;
+        }
+        break;
+      }
+      // waiting_on_deps, cancelled — counted in total only
+    }
+  }
+
+  return { total, queued, running, ci, review, needsAttention, failed, completed };
+}
+
+/** Fetch the most recent state-change events across all tasks. */
+export async function getRecentEvents(opts?: { limit?: number }) {
+  return db
+    .select()
+    .from(taskEvents)
+    .orderBy(desc(taskEvents.createdAt))
+    .limit(opts?.limit ?? 20);
+}

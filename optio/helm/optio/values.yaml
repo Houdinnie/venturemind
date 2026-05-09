@@ -1,0 +1,514 @@
+# Optio Helm Chart Values
+#
+# Defaults are production-ready: GHCR images with IfNotPresent pull policy.
+# For local development, use values.local.yaml:
+#   helm install optio helm/optio -f helm/optio/values.local.yaml ...
+# (setup-local.sh does this automatically)
+#
+# For production deployments, see values.production.yaml for recommended overrides
+# (replicas, autoscaling, ingress, external DB/Redis, etc.).
+#
+# Install a released chart: helm install optio oci://ghcr.io/jonwiggins/optio
+
+# ──────────────────────────────────────────────────────────────────────────────
+# API Server
+# ──────────────────────────────────────────────────────────────────────────────
+api:
+  image:
+    repository: ghcr.io/jonwiggins/optio-api
+    tag: latest
+    pullPolicy: IfNotPresent
+  replicas: 1
+  port: 4000
+  service:
+    type: ClusterIP    # Set to NodePort for local K8s dev (Docker Desktop, kind, minikube)
+    nodePort: ""       # Fixed node port when type=NodePort, e.g. 4000
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: "1"
+      memory: 1Gi
+  env:
+    LOG_LEVEL: info
+  # Pod anti-affinity spreads API replicas across nodes.
+  # "soft" = preferredDuringSchedulingIgnoredDuringExecution (default)
+  # "hard" = requiredDuringSchedulingIgnoredDuringExecution
+  # ""     = disabled
+  antiAffinity: soft
+  # Kubernetes nodeSelector for API pods (opt-in).
+  nodeSelector: {}
+  # Pod disruption budget. Enable when running multiple replicas to ensure
+  # availability during voluntary disruptions (rolling updates, node drains).
+  pdb:
+    enabled: false
+    # Set ONE of minAvailable or maxUnavailable (not both).
+    minAvailable: ""         # e.g. 1 or "50%"
+    maxUnavailable: 1        # Used when minAvailable is empty
+  # Horizontal pod autoscaler. Requires metrics-server in the cluster.
+  autoscaling:
+    enabled: false
+    minReplicas: 2
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 70
+    targetMemoryUtilizationPercentage: ""  # Optional, e.g. 80
+  # Worker scaling: BullMQ workers (task-worker, pr-watcher, repo-cleanup,
+  # ticket-sync) use Redis-backed queues with built-in leader election via
+  # BullMQ's concurrency model. Each worker type processes jobs independently,
+  # so multiple API replicas safely share the same queue — Redis ensures each
+  # job is delivered to exactly one worker instance. You can safely increase
+  # api.replicas for high availability without risking duplicate job processing.
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Web UI
+# ──────────────────────────────────────────────────────────────────────────────
+web:
+  image:
+    repository: ghcr.io/jonwiggins/optio-web
+    tag: latest
+    pullPolicy: IfNotPresent
+  replicas: 1
+  port: 3000
+  service:
+    type: ClusterIP    # Set to NodePort for local K8s dev (Docker Desktop, kind, minikube)
+    nodePort: ""       # Fixed node port when type=NodePort, e.g. 3100
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  # Pod anti-affinity (same options as api.antiAffinity)
+  antiAffinity: soft
+  # Kubernetes nodeSelector for web pods (opt-in).
+  nodeSelector: {}
+  # Pod disruption budget (same options as api.pdb)
+  pdb:
+    enabled: false
+    minAvailable: ""
+    maxUnavailable: 1
+  # Horizontal pod autoscaler (same options as api.autoscaling)
+  autoscaling:
+    enabled: false
+    minReplicas: 2
+    maxReplicas: 4
+    targetCPUUtilizationPercentage: 70
+    targetMemoryUtilizationPercentage: ""
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Optio Operations Assistant Pod
+# A single always-on pod running the Optio conversational assistant.
+# It makes API calls on behalf of users — no repo checkout needed.
+# ──────────────────────────────────────────────────────────────────────────────
+optio:
+  enabled: true
+  image:
+    repository: ghcr.io/jonwiggins/optio-optio
+    tag: latest
+    pullPolicy: IfNotPresent
+  # Kubernetes nodeSelector for the optio assistant pod (opt-in).
+  nodeSelector: {}
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Agent containers
+# ──────────────────────────────────────────────────────────────────────────────
+agent:
+  image:
+    repository: ghcr.io/jonwiggins/optio-agent-base
+    tag: latest
+    pullPolicy: IfNotPresent
+    # Prefix used to resolve preset images (base, node, python, go, rust, full, dind).
+    # The full image name is: {prefix}{preset}:{tag}
+    # GHCR: ghcr.io/jonwiggins/optio-agent-  →  ghcr.io/jonwiggins/optio-agent-node:latest
+    # Local: optio-                           →  optio-node:latest
+    prefix: "ghcr.io/jonwiggins/optio-agent-"
+  imagePullPolicy: IfNotPresent
+  # Envoy sidecar proxy for secret isolation.
+  # When repos.secretProxy is enabled, this image is added as a sidecar to agent pods.
+  # The sidecar intercepts outbound HTTPS requests and injects auth headers so the
+  # agent container never sees raw secrets (GitHub token, Anthropic API key).
+  envoyProxy:
+    image:
+      repository: envoyproxy/envoy
+      tag: v1.31-latest
+      pullPolicy: IfNotPresent
+  # PVC template for repo pod home directories.
+  # These PVCs are created dynamically by the API server (one per repo pod
+  # instance), but this template controls the storage class and default size.
+  pvc:
+    storageClass: ""  # Empty = cluster default storage class
+    size: 10Gi
+    accessModes:
+      - ReadWriteOnce
+  # Kubernetes scheduling constraints for agent pods.
+  # nodeSelector pins pods to nodes with matching labels (e.g. a dedicated node pool).
+  # tolerations allow pods to schedule on tainted nodes.
+  nodeSelector: {}
+  #  cloud.google.com/gke-nodepool: agents
+  tolerations: []
+  #  - key: optio.dev/agents
+  #    operator: Equal
+  #    value: "true"
+  #    effect: NoSchedule
+  # StatefulSet/Job configuration for agent pods.
+  # When enabled, repo pods are managed by StatefulSets and workflow pods by
+  # Jobs. This enables Karpenter (and other node autoscalers) to provision
+  # nodes for agent workloads. Set to false for bare-pod mode (legacy).
+  statefulSet:
+    enabled: true
+    terminationGracePeriodSeconds: 300
+  # Shared cache directory PVCs (opt-in per repo).
+  # Controls storage class and size limits for cache directories.
+  cache:
+    enabled: true                     # Set false to hard-disable the feature
+    storageClass: ""                  # Empty = cluster default storage class
+    maxSizePerDirectoryGi: 100        # Max size for a single cache directory
+    maxSizeTotalGi: 200               # Max total cache size across all dirs per repo
+    defaultSizePerDirectoryGi: 10     # Default size when creating a cache directory
+  # Repo init timeout (how long to wait for clone to complete)
+  repoInitTimeoutMs: 120000           # 2 min default; increase for large repos
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Network Policy
+# Default-deny policy for agent (repo) pods. Restricts cluster-internal
+# traffic so compromised pods cannot reach PostgreSQL, Redis, or other
+# services directly. Requires a CNI plugin that supports NetworkPolicy
+# (e.g. Calico, Cilium, Weave Net). Not supported on Docker Desktop.
+# ──────────────────────────────────────────────────────────────────────────────
+networkPolicy:
+  enabled: false  # Set to true when your cluster supports NetworkPolicy
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Installed-skills cache (Phase 2 of issue #497)
+#
+# When enabled, the API deployment mounts a PVC at /opt/optio/skills-cache.
+# The skill-sync worker writes content-addressable git clones there (keyed by
+# resolved commit SHA) so multiple installed-skill rows pinned to the same
+# SHA share a single copy and survive API rollouts.
+#
+# When disabled, /opt/optio/skills-cache falls back to an emptyDir, meaning
+# every API restart re-clones every installed skill from upstream. Fine for
+# dev; turn this on in production.
+# ──────────────────────────────────────────────────────────────────────────────
+installedSkillsCache:
+  enabled: false
+  storageClass: ""  # Empty = cluster default storage class
+  size: 5Gi
+  accessModes:
+    - ReadWriteOnce
+
+# ──────────────────────────────────────────────────────────────────────────────
+# PostgreSQL (built-in)
+# Set enabled=false and configure externalDatabase.url for managed Postgres.
+# ──────────────────────────────────────────────────────────────────────────────
+postgresql:
+  enabled: true
+  image:
+    repository: postgres
+    tag: "16"
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  # Kubernetes nodeSelector for PostgreSQL pods (opt-in).
+  nodeSelector: {}
+  storage:
+    size: 5Gi
+  auth:
+    database: optio
+    username: optio
+    # REQUIRED when auth is enabled. Override this in production.
+    password: ""
+  # TLS encryption for the in-cluster Postgres connection.
+  # When enabled, a self-signed CA + server cert are generated at install time
+  # and the DATABASE_URL is configured with sslmode=verify-full.
+  tls:
+    enabled: true
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Redis (built-in)
+# Set enabled=false and configure externalRedis.url for managed Redis.
+# ──────────────────────────────────────────────────────────────────────────────
+redis:
+  enabled: true
+  image:
+    repository: redis
+    tag: 7-alpine
+  # Kubernetes nodeSelector for Redis pods (opt-in).
+  nodeSelector: {}
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi
+  # TLS encryption for in-cluster Redis. Encrypts data in transit (BullMQ job
+  # payloads, pub/sub log streams) with TLSv1.3. Recommended for production.
+  tls:
+    enabled: true
+    # When true, generates a self-signed CA + server cert at install time via
+    # Helm's genSignedCert. Set to false if providing certs externally
+    # (e.g., cert-manager) and populate redis.tls.existingSecret.
+    autoGenerateCert: true
+    # Name of an existing TLS Secret (type kubernetes.io/tls with ca.crt key).
+    # Only used when autoGenerateCert is false.
+    existingSecret: ""
+  # Redis password authentication (requirepass). Strongly recommended alongside TLS.
+  auth:
+    enabled: true
+    # Leave empty to auto-generate a 32-char password at install time.
+    # The password is stored in a K8s Secret and persisted across upgrades.
+    password: ""
+
+# ──────────────────────────────────────────────────────────────────────────────
+# External services (used when built-in PostgreSQL/Redis are disabled)
+# ──────────────────────────────────────────────────────────────────────────────
+
+# REQUIRED when postgresql.enabled=false
+externalDatabase:
+  url: ""  # e.g., postgres://user:pass@host:5432/optio
+
+# REQUIRED when redis.enabled=false
+externalRedis:
+  url: ""  # e.g., rediss://:password@host:6379 (use rediss:// for TLS)
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Public URL
+# REQUIRED when auth is enabled. The externally-reachable URL where both web
+# and API are served (same origin via ingress path routing).
+# Used for OAuth callbacks, Slack links, etc.
+# ──────────────────────────────────────────────────────────────────────────────
+publicUrl: ""  # e.g. https://optio.example.com
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Authentication
+# When auth.disabled=false (the default), at least one OAuth provider and
+# publicUrl are REQUIRED.
+# ──────────────────────────────────────────────────────────────────────────────
+auth:
+  # Set to true to disable authentication (NOT recommended for production).
+  disabled: false
+  # OAuth provider credentials — configure at least one when auth is enabled.
+  github:
+    clientId: ""
+    clientSecret: ""
+  google:
+    clientId: ""
+    clientSecret: ""
+  gitlab:
+    clientId: ""
+    clientSecret: ""
+    # baseUrl: https://gitlab.com  # Self-hosted GitLab URL
+  # Generic OIDC provider (Keycloak, Authentik, Authelia, Zitadel, Okta, Auth0, etc.)
+  oidc:
+    issuerUrl: ""       # e.g. https://auth.example.com/realms/optio
+    clientId: ""
+    clientSecret: ""
+    displayName: "SSO"  # Button label: "Sign in with {displayName}"
+    scopes: ""          # Defaults to "openid email profile" if empty
+
+# ──────────────────────────────────────────────────────────────────────────────
+# GitHub webhook signature validation
+# ──────────────────────────────────────────────────────────────────────────────
+webhook:
+  githubSecret: ""  # Generate with: openssl rand -hex 32. Must match GitHub's webhook config.
+
+# ──────────────────────────────────────────────────────────────────────────────
+# GitHub App (recommended — replaces OAuth App + PAT for GitHub operations)
+# Register at https://github.com/organizations/{org}/settings/apps
+# Required permissions: Contents R/W, Pull Requests R/W, Issues R/W, Checks R, Metadata R
+# ──────────────────────────────────────────────────────────────────────────────
+github:
+  app:
+    # IMPORTANT: id and installationId MUST be quoted strings in your values file.
+    # Unquoted large integers are silently truncated by YAML float parsing.
+    # Correct:   id: "123456"
+    # Wrong:     id: 123456
+    id: ""                # App ID (quoted string)
+    clientId: ""          # Client ID (for user OAuth login flow)
+    clientSecret: ""      # Client secret (for user OAuth login flow)
+    installationId: ""    # Installation ID (quoted string)
+    privateKey: ""        # PEM private key (for server-side installation tokens)
+    # Git commit author for agent commits. Use the GitHub App's bot identity
+    # so commits show properly in the GitHub UI.
+    # Format: "{app-name}[bot]" and "{app-id}+{app-slug}[bot]@users.noreply.github.com"
+    # Find these on your app's settings page at github.com/settings/apps/{slug}
+    botName: ""           # e.g. "my-optio-app[bot]"
+    botEmail: ""          # e.g. "123456+my-optio-app[bot]@users.noreply.github.com"
+    # Use an existing K8s Secret instead of the values above. The secret must
+    # contain keys: GITHUB_APP_ID, GITHUB_APP_CLIENT_ID, GITHUB_APP_CLIENT_SECRET,
+    # GITHUB_APP_INSTALLATION_ID, GITHUB_APP_PRIVATE_KEY.
+    # Optionally also: GITHUB_APP_BOT_NAME, GITHUB_APP_BOT_EMAIL.
+    # Useful with external-secrets-operator, sealed-secrets, or vault-injector.
+    existingSecret: ""
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Secrets encryption
+# REQUIRED. Generate with: openssl rand -hex 32
+# ──────────────────────────────────────────────────────────────────────────────
+encryption:
+  key: ""
+
+# Shared secret for pod-to-API credential requests (git credential helper).
+# If empty, derived from the encryption key at startup.
+credentialSecret: ""
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Ingress
+# ──────────────────────────────────────────────────────────────────────────────
+ingress:
+  enabled: false
+  className: nginx
+  # The ingress template automatically blocks /api/internal/* from public traffic
+  # via an nginx server-snippet. These endpoints use bearer token auth (not session
+  # auth) and must only be reachable within the cluster. If using a non-nginx ingress
+  # controller, add equivalent path-blocking rules in the annotations below.
+  annotations: {}
+  # cert-manager TLS support. When enabled, the chart adds the
+  # cert-manager.io/cluster-issuer annotation and generates a TLS block
+  # for each host automatically.
+  certManager:
+    enabled: false
+    clusterIssuer: letsencrypt-prod
+  hosts:
+    - host: optio.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+          service: web
+        - path: /api
+          pathType: Prefix
+          service: api
+        - path: /ws
+          pathType: Prefix
+          service: api
+  # Manual TLS configuration. When certManager is enabled, TLS entries are
+  # generated automatically from hosts — this field is only needed for
+  # manual certificate management.
+  tls: []
+  #  - secretName: optio-tls
+  #    hosts:
+  #      - optio.example.com
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Gateway API
+# Alternative to Ingress for clusters running Gateway API (GA in K8s 1.26+).
+# Mutually exclusive with ingress — do not enable both.
+# ──────────────────────────────────────────────────────────────────────────────
+gatewayAPI:
+  enabled: false
+  # Gateway controller class (required when enabled).
+  # Common values: cilium, istio, envoy-gateway
+  gatewayClassName: ""
+  listeners:
+    - name: http
+      port: 80
+      protocol: HTTP
+    # - name: https
+    #   port: 443
+    #   protocol: HTTPS
+    #   tls:
+    #     mode: Terminate
+    #     certificateRefs:
+    #       - name: optio-tls
+  # Hostname for the Gateway and HTTPRoute. Leave empty for wildcard.
+  hostname: ""
+  # Annotations for the Gateway resource (e.g., cert-manager).
+  gatewayAnnotations: {}
+  # Annotations for the HTTPRoute resource (e.g., rate-limiting).
+  httpRouteAnnotations: {}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Push Notifications (Web Push API)
+# Optional. If publicKey/privateKey are empty, browser push is disabled.
+# Generate keys with: npx web-push generate-vapid-keys --json
+# ──────────────────────────────────────────────────────────────────────────────
+notifications:
+  vapid:
+    publicKey: ""
+    privateKey: ""
+    subject: ""  # e.g. mailto:ops@example.com
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Observability (OpenTelemetry)
+# Set otel.enabled=true and configure OTEL_EXPORTER_OTLP_ENDPOINT to ship
+# traces, metrics, and (optionally) logs to any OTLP backend (Datadog,
+# Honeycomb, Grafana Cloud, etc.).
+# ──────────────────────────────────────────────────────────────────────────────
+observability:
+  otel:
+    enabled: false
+    endpoint: ""             # e.g. https://api.honeycomb.io:443 or http://otel-collector:4318
+    protocol: "http/protobuf"
+    headers: ""              # Comma-separated key=value, e.g. "x-honeycomb-team=abc123"
+    serviceName: "optio-api"
+    resourceAttributes: ""   # Extra attrs, e.g. "team=platform,region=us-east-1"
+    samplingRatio: "1.0"
+    metricsIntervalMs: "60000"
+    logsEnabled: false
+    debug: false
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Namespace
+# ──────────────────────────────────────────────────────────────────────────────
+namespace: optio
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Namespace resource quotas
+# Enable to prevent rogue agents from consuming all cluster resources.
+# ──────────────────────────────────────────────────────────────────────────────
+resourceQuota:
+  enabled: false
+  hard:
+    requests.cpu: "20"
+    requests.memory: 40Gi
+    limits.cpu: "40"
+    limits.memory: 80Gi
+    pods: "50"
+    persistentvolumeclaims: "30"
+
+# ──────────────────────────────────────────────────────────────────────────────
+# RBAC
+# ──────────────────────────────────────────────────────────────────────────────
+rbac:
+  clusterRole:
+    # Set to false for namespace-only deployments where cluster-wide
+    # permissions are not available (e.g. shared multitenant clusters).
+    # When disabled, the cluster overview page will not show node
+    # utilization, but all other functionality works normally.
+    create: true
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Service account
+# ──────────────────────────────────────────────────────────────────────────────
+serviceAccount:
+  create: true
+  name: optio
+  # Annotations for the service account (e.g., for GKE Workload Identity or EKS IRSA).
+  # Used by both API/web pods (for K8s API access) and agent pods (for cloud service auth).
+  # Example for GKE Workload Identity:
+  #   iam.gke.io/gcp-service-account: optio@PROJECT_ID.iam.gserviceaccount.com
+  # Example for EKS IRSA (lets CodeCommit use the pod's IAM role instead of static AWS keys):
+  #   eks.amazonaws.com/role-arn: arn:aws:iam::ACCOUNT_ID:role/optio-codecommit
+  annotations: {}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Image pull secrets for pulling from private registries.
+# Each entry should be the name of an existing Kubernetes secret of type
+# kubernetes.io/dockerconfigjson in the target namespace.
+# ──────────────────────────────────────────────────────────────────────────────
+imagePullSecrets: []
+#  - name: my-registry-secret

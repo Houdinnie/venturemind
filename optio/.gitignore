@@ -1,0 +1,22 @@
+.DS_Store
+node_modules/
+dist/
+.turbo/
+.next/
+.env
+.env.local
+*.tsbuildinfo
+coverage/
+coverage-report.md
+apps/api/.env
+/tmp/
+.optio/
+.claude/
+.tool-versions
+.values.local.yaml
+.worktrees/
+/issues/
+
+# Generated OpenAPI artifacts (rebuild via `pnpm --filter @optio/api openapi:dump`)
+apps/api/openapi.generated.json
+apps/api/openapi.generated.d.ts

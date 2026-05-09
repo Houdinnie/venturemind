@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+  trooper:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - CLAUDE_API_KEY=${CLAUDE_API_KEY}
+      - FALLBACK_URL=http://ollama:11434/api/chat
+      - OLLAMA_MODEL=${OLLAMA_MODEL:-qwen2.5:3b}
+      - TROOPER_PORT=3000
+      - TROOPER_BIND=0.0.0.0
+      - OLLAMA_BASE_URL=http://ollama:11434
+    depends_on:
+      - ollama
+    restart: unless-stopped
+
+  ollama:
+    image: ollama/ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    restart: unless-stopped
+
+volumes:
+  ollama_data:
